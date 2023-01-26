@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    
+    <link rel="canonical" href="https://vivesjesus.github.io/iaw/6_1_flask_sqlalchemy.html">
+    <link rel="shortcut icon" href="./img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>6.1 Usando base de datos en Flask, flask-sqlalchemy - IMPLANTACIÓN APLICACIONES WEB</title>
+    <link href="./css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="./css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="./css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="./css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="./js/jquery-3.2.1.min.js"></script>
+    <script src="./js/bootstrap-3.3.7.min.js"></script>
+    <script src="./js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '.';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Usando base de datos en Flask, flask-sqlalchemy", url: "#_top", children: [
+              {title: "Nuestra aplicaci\u00f3n: \u201cMini\u201d tienda virtual", url: "#nuestra-aplicacion-mini-tienda-virtual" },
+              {title: "El modelo de base de datos", url: "#el-modelo-de-base-de-datos" },
+              {title: "Instalaci\u00f3n de flask-sqlalchemy", url: "#instalacion-de-flask-sqlalchemy" },
+              {title: "Configuraci\u00f3n de nuestra configuraci\u00f3n", url: "#configuracion-de-nuestra-configuracion" },
+              {title: "C\u00f3digo ejemplo de esta unidad", url: "#codigo-ejemplo-de-esta-unidad" },
+          ]},
+        ];
+
+    </script>
+    <script src="./js/base.js"></script>
+      <script src="search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="6_2_modelos_BBDD.html" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="6_2_modelos_BBDD.html" class="btn btn-xs btn-link">
+        6.2 El modelo de base de datos
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="5_7_subida_ficheros.html" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="5_7_subida_ficheros.html" class="btn btn-xs btn-link">
+        5.7. Subida de Ficheros
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="usando-base-de-datos-en-flask-flask-sqlalchemy"><strong>Usando base de datos en Flask, flask-sqlalchemy</strong><a class="headerlink" href="#usando-base-de-datos-en-flask-flask-sqlalchemy" title="Permanent link">&para;</a></h1>
+<p>Aunque python nos ofrece diferentes módulos para conectarnos a los distintos motores de base de datos:</p>
+<ul>
+<li>mysql: <a href="https://pypi.org/project/MySQL-python/">MySql-Python</a>, <a href="https://pypi.org/project/PyMySQL/">PyMySQL</a>, <a href="https://dev.mysql.com/downloads/connector/python/">Mysql Conector</a></li>
+<li><a href="https://wiki.postgresql.org/wiki/Python">postgreSQL</a></li>
+<li><a href="https://docs.python.org/3.8/library/sqlite3.html">sqlite3</a></li>
+</ul>
+<p>Usaremos la extensión <a href="https://flask-sqlalchemy.palletsprojects.com/en/3.0.x/">Flask-SQLAlchemy</a> para manejar el modelo de datos de nuestra aplicación. Esta extensión provee un wrapper para el <a href="https://www.sqlalchemy.org/">proyecto SQLAlchemy</a>, el cual es un <a href="https://es.wikipedia.org/wiki/Asignaci%C3%B3n_objeto-relacional">Object Relational Mapper o ORM</a>.</p>
+<p>Los ORM permiten a las aplicaciones con base de datos trabajar con objetos en vez de tablas y SQL. Las operaciones realizadas en los objetos son traducidos a comandos de base de datos transparente para el ORM. Por lo tanto se abstrae el gestor de base de datos utilizado, si cambiamos de SGBD no tendremos que cambiar nuestra aplicación. De este modo, por ejemplo, podemos estar trabajando con sqlite3 en nuestro entorno de desarrollo, y con una base de datos PostgreSQL en nuestro entorno de producción.</p>
+<h2 id="nuestra-aplicacion-mini-tienda-virtual"><strong>Nuestra aplicación: “Mini” tienda virtual</strong><a class="headerlink" href="#nuestra-aplicacion-mini-tienda-virtual" title="Permanent link">&para;</a></h2>
+<hr />
+<p>A partir de esta unidad vamos a desarrollar una aplicación Web con todos los elementos que hemos aprendido en las unidades anteriores, las características de nuestra aplicación van a ser las siguientes:</p>
+<ul>
+<li>Vamos a crear una “mini” tienda virtual donde se van a vender artículos (en nuestro ejemplo serán videojuegos). Cada artículo pertenece a una categoría.</li>
+<li>A nuestra tienda virtual se pueden dar de alta nuestro clientes.</li>
+<li>Existe un usuario administrador que puede dar de alta, modificar o eliminar los artículos de la tienda.</li>
+<li>Cuando un usuario compra un artículo se guarda en un “carro de la compra”. El carro de la compra no lo vamos a guardar en una tabla de la base de datos, vamos a utilizar cookies para guardar dicha información.</li>
+<li>Los usuarios pueden acceder a la tienda para realizar las compras, vamos a utilizar sesiones para similar la persistencia de la conexión.</li>
+</ul>
+<h2 id="el-modelo-de-base-de-datos"><strong>El modelo de base de datos</strong><a class="headerlink" href="#el-modelo-de-base-de-datos" title="Permanent link">&para;</a></h2>
+<hr />
+<p>Los datos que guardamos en nuestra base de datos serán representados por una colección de clases que son referidas como modelos de base de datos. La capa ORM hará las traducciones necesarias y convertirá los objetos creados a partir de estas clases a filas en la base de datos.</p>
+<p>Veamos el modelo de datos que vamos a implementar:</p>
+<p><img alt="imagen" src="imagenes/modelo.png" /></p>
+<ul>
+<li>Categorías: Tabla para guardar las categorías de los artículo. Vamos a poder buscar artículos por categorías.</li>
+<li>Artículos: Tabla donde guardamos delos datos de los artículo. Cada artículo corresponde a una categoría.</li>
+<li>Usuarios: Tabla donde guardamos los datos de los usuarios. Un usuario puede tener el perfil de administrador.</li>
+<li>Carrito: Podríamos guardarlo en una tabla, pero en nuestro ejemplo vamos a usar cookies para gestionar los artículos que va comprando un usuario.</li>
+</ul>
+<h2 id="instalacion-de-flask-sqlalchemy"><strong>Instalación de flask-sqlalchemy</strong><a class="headerlink" href="#instalacion-de-flask-sqlalchemy" title="Permanent link">&para;</a></h2>
+<hr />
+<p>La extensión Flask-sqlalchemy nos posibilita usar el módulo sqlalchemy en nuestra aplicación FLask. Para instalarla, en nuestro entono virtual activo:
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>pip install Flask-Sqlalchemy
+</code></pre></div>
+Recuerda que también puedes instalar las depencias con
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>pip install -r requirements.txt
+</code></pre></div>
+A continuación necesitamos configurar algunos parámetros para configurar nuestra aplicación.</p>
+<h2 id="configuracion-de-nuestra-configuracion"><strong>Configuración de nuestra configuración</strong><a class="headerlink" href="#configuracion-de-nuestra-configuracion" title="Permanent link">&para;</a></h2>
+<hr />
+<p>Todos los parámetros de configuración de la aplicación que necesitemos los vamos a guardar en un nuevo fichero (config.py) que guardaremos en el directorio aplicacion, con la configuración de Flask-sqlalchemy quedaría de la siguiente manera:</p>
+<h5 id="configpy"><strong>config.py</strong><a class="headerlink" href="#configpy" title="Permanent link">&para;</a></h5>
+<p><div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>import os   
+<span class="linenos" data-linenos="2 "></span>secret_key = &#39;A0Zr98j/3yX R~XHH!jmN]LWX/,?RT&#39;
+<span class="linenos" data-linenos="3 "></span>PWD = os.path.abspath(os.curdir)    
+<span class="linenos" data-linenos="4 "></span>DEBUG = True
+<span class="linenos" data-linenos="5 "></span>SQLALCHEMY_DATABASE_URI = &#39;sqlite:///{}/dbase.db&#39;.format(PWD)
+<span class="linenos" data-linenos="6 "></span># con mysql, SQLALCHEMY_DATABASE_URI=mysql://username:password@server/db
+<span class="linenos" data-linenos="7 "></span># SQLALCHEMY_DATABASE_URI = mysql://root:&quot;&quot;@localhost/db
+<span class="linenos" data-linenos="8 "></span>SQLALCHEMY_TRACK_MODIFICATIONS = False
+</code></pre></div>
+- secret_key: Ya la habíamos usado anteriormente, nos permite cifrar los tokens para el mecanismo de seguridad CSRF de los fomularios.
+- SQLALCHEMY_DATABASE_URI: Indicamos la cadena de conexión a la base de datos. En este caso vamos a utilizar una base de datos sqlite3. Podríamos tener varias variables para configurar las conexiones de base de datos en los entornos de desarrollo, prueba y producción.
+- SQLALCHEMY_TRACK_MODIFICATIONS: Deshabilitamos la gestión de notificaciones de sqlalchemy.</p>
+<p>Este fichero se utilizará en el programa principal (<strong>app.py</strong>) para cargar las variables de configuración:
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>app.config.from_object(config)
+</code></pre></div>
+Además en el programa principal vamos a crear un objeto que representa nuestra base de datos:
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>db = SQLAlchemy(app)
+</code></pre></div>
+El programa principal quedaría:</p>
+<h5 id="apppy"><strong>app.py</strong><a class="headerlink" href="#apppy" title="Permanent link">&para;</a></h5>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>from flask import Flask, render_template
+<span class="linenos" data-linenos=" 2 "></span>from flask_bootstrap import Bootstrap
+<span class="linenos" data-linenos=" 3 "></span>from flask_sqlalchemy import SQLAlchemy
+<span class="linenos" data-linenos=" 4 "></span>from aplicacion import config   
+<span class="linenos" data-linenos=" 5 "></span>
+<span class="linenos" data-linenos=" 6 "></span>app = Flask(__name__)
+<span class="linenos" data-linenos=" 7 "></span>app.config.from_object(config)
+<span class="linenos" data-linenos=" 8 "></span>Bootstrap(app)  
+<span class="linenos" data-linenos=" 9 "></span>db = SQLAlchemy(app)    
+<span class="linenos" data-linenos="10 "></span>
+<span class="linenos" data-linenos="11 "></span>@app.route(&#39;/&#39;)
+<span class="linenos" data-linenos="12 "></span>def inicio():
+<span class="linenos" data-linenos="13 "></span>    return render_template(&quot;inicio.html&quot;)   
+<span class="linenos" data-linenos="14 "></span>
+<span class="linenos" data-linenos="15 "></span>@app.errorhandler(404)
+<span class="linenos" data-linenos="16 "></span>def page_not_found(error):
+<span class="linenos" data-linenos="17 "></span>    return render_template(&quot;error.html&quot;,error=&quot;Página no encontrada...&quot;), 404
+</code></pre></div>
+<h2 id="codigo-ejemplo-de-esta-unidad"><strong>Código ejemplo de esta unidad</strong><a class="headerlink" href="#codigo-ejemplo-de-esta-unidad" title="Permanent link">&para;</a></h2>
+<hr />
+<p><a href="zip/codigo_6_1.zip">Código</a></p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="6_2_modelos_BBDD.html" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="6_2_modelos_BBDD.html" class="btn btn-xs btn-link">
+        6.2 El modelo de base de datos
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="5_7_subida_ficheros.html" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="5_7_subida_ficheros.html" class="btn btn-xs btn-link">
+        5.7. Subida de Ficheros
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content"><p>2022-2023 Jesús Vives - Licencia CC BY-NC-SA</p>
+  <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>

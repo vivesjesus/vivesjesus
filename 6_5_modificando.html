@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    
+    <link rel="canonical" href="https://vivesjesus.github.io/iaw/6_5_modificando.html">
+    <link rel="shortcut icon" href="./img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>6.5 Modificando registros en la base de datos - IMPLANTACIÓN APLICACIONES WEB</title>
+    <link href="./css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="./css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="./css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="./css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="./js/jquery-3.2.1.min.js"></script>
+    <script src="./js/bootstrap-3.3.7.min.js"></script>
+    <script src="./js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '.';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Modificando registros en la base de datos", url: "#_top", children: [
+              {title: "Modificando art\u00edculos", url: "#modificando-articulos" },
+              {title: "Modificando categor\u00edas", url: "#modificando-categorias" },
+              {title: "C\u00f3digo ejemplo de esta unidad", url: "#codigo-ejemplo-de-esta-unidad" },
+          ]},
+        ];
+
+    </script>
+    <script src="./js/base.js"></script>
+      <script src="search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="6_6_borrando.html" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="6_6_borrando.html" class="btn btn-xs btn-link">
+        6.6. Borrando un Registro
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="6_4_creando.html" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="6_4_creando.html" class="btn btn-xs btn-link">
+        6.4 Creando registros en la base de datos
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="modificando-registros-en-la-base-de-datos">Modificando registros en la base de datos<a class="headerlink" href="#modificando-registros-en-la-base-de-datos" title="Permanent link">&para;</a></h1>
+<p>En este apartado vamos a estudiar como modificar un registro en nuestra base de datos.</p>
+<h2 id="modificando-articulos">Modificando artículos<a class="headerlink" href="#modificando-articulos" title="Permanent link">&para;</a></h2>
+<p>Lo primero es insertar un enlace en la página principal que nos permita modificar artículos (se añade un enlace por cada artículo), para ello en la plantilla <code>inicio.html</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>&lt;td&gt;&lt;a href=&quot;{{url_for(&#39;articulos_edit&#39;,id=art.id)}}&quot;&gt;&lt;span class=&quot;glyphicon glyphicon-pencil&quot;&gt;&lt;/span&gt; Modificar&lt;/a&gt;&lt;/td&gt;
+</code></pre></div>
+<ul>
+<li>Vamos a usar el mismo formulario (<code>formArticulo</code>) que hemos utilizado en la unidad anterior para añadir nuevos artículos, para realizar la modificación.</li>
+<li>Vamos a utilizar el mismo template <code>articulos_new.html</code> para mostrar el formulario.</li>
+<li>
+<p>En el programa principal, vamos a crear una ruta dinámica, que nos permite modificar un registro según su identificador:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>@app.route(&#39;/articulos/&lt;id&gt;/edit&#39;, methods=[&quot;get&quot;,&quot;post&quot;])
+</code></pre></div>
+</li>
+<li>
+<p>Lo primero que hacemos es seleccionar el artículo según el identificador recibido en la ruta, sino existe el artículo devolvemos un error:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>art=Articulos.query.get(id)
+<span class="linenos" data-linenos="2 "></span>    if art is None:
+<span class="linenos" data-linenos="3 "></span>        abort(404)
+</code></pre></div>
+</li>
+<li>
+<p>Creamos un nuevo formulario. Este formulario va a recibir la información que hemos introducido y enviado por el método POST y la información del fichero que hemos subido, sin embargo al entrar por primera vez (método GET) se va a rellenar con lo datos del objeto <code>Articulos</code> que hemos seleccionado:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>form=formArticulo(obj=art)
+</code></pre></div>
+</li>
+<li>
+<p>Si el formulario es válido:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>...
+<span class="linenos" data-linenos=" 2 "></span>if form.validate_on_submit():
+<span class="linenos" data-linenos=" 3 "></span>    #Borramos la imagen anterior
+<span class="linenos" data-linenos=" 4 "></span>    if  form.photo.data:
+<span class="linenos" data-linenos=" 5 "></span>        os.remove(app.root_path+&quot;/static/upload/&quot;+art.image)
+<span class="linenos" data-linenos=" 6 "></span>        try:
+<span class="linenos" data-linenos=" 7 "></span>            f = form.photo.data
+<span class="linenos" data-linenos=" 8 "></span>            nombre_fichero=secure_filename(f.filename)
+<span class="linenos" data-linenos=" 9 "></span>            f.save(app.root_path+&quot;/static/upload/&quot;+nombre_fichero)
+<span class="linenos" data-linenos="10 "></span>        except:
+<span class="linenos" data-linenos="11 "></span>            nombre_fichero=&quot;&quot;
+<span class="linenos" data-linenos="12 "></span>    else:
+<span class="linenos" data-linenos="13 "></span>        nombre_fichero=art.image
+<span class="linenos" data-linenos="14 "></span>
+<span class="linenos" data-linenos="15 "></span>    form.populate_obj(art)
+<span class="linenos" data-linenos="16 "></span>    art.image=nombre_fichero
+<span class="linenos" data-linenos="17 "></span>    db.session.commit()
+<span class="linenos" data-linenos="18 "></span>    return redirect(url_for(&quot;inicio&quot;))
+</code></pre></div>
+<p>Se realizan las siguientes acciones:</p>
+<ul>
+<li>Si hemos subido otra imagen se elimina la anterior.</li>
+<li>Se intenta guardar el fichero que se ha subido en el formulario.</li>
+<li>Si no se ha subido ninguno el nombre la imagen sigue siendo la anterior.</li>
+<li>Se modifica el objeto <code>Articulos</code> al rellenar con los datos del formulario (<code>form.populate_obj(art)</code>).</li>
+<li>Si el formulario no es válido se vuelve a generar la plantilla con el formulario con datos, mostrando si lo hemos codificado los errores de validación oportunos.</li>
+</ul>
+</li>
+</ul>
+<h2 id="modificando-categorias">Modificando categorías<a class="headerlink" href="#modificando-categorias" title="Permanent link">&para;</a></h2>
+<p>De una forma similar puedes estudiar el código para ver cómo se modifican las categorías en nuestra base de datos.</p>
+<h2 id="codigo-ejemplo-de-esta-unidad">Código ejemplo de esta unidad<a class="headerlink" href="#codigo-ejemplo-de-esta-unidad" title="Permanent link">&para;</a></h2>
+<p><a href="../../ejemplos/u25">Código</a></p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="6_6_borrando.html" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="6_6_borrando.html" class="btn btn-xs btn-link">
+        6.6. Borrando un Registro
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="6_4_creando.html" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="6_4_creando.html" class="btn btn-xs btn-link">
+        6.4 Creando registros en la base de datos
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content"><p>2022-2023 Jesús Vives - Licencia CC BY-NC-SA</p>
+  <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    
+    <link rel="canonical" href="https://vivesjesus.github.io/iaw/3_4_organizando_codigo.html">
+    <link rel="shortcut icon" href="./img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>3.4. Organizando el Código - IMPLANTACIÓN APLICACIONES WEB</title>
+    <link href="./css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="./css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="./css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="./css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="./js/jquery-3.2.1.min.js"></script>
+    <script src="./js/bootstrap-3.3.7.min.js"></script>
+    <script src="./js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '.';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Estructura de nuestra aplicaci\u00f3n", url: "#_top", children: [
+              {title: "Contenido manage.py", url: "#contenido-managepy" },
+              {title: "Contenido app.py", url: "#contenido-apppy" },
+          ]},
+        ];
+
+    </script>
+    <script src="./js/base.js"></script>
+      <script src="search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="4_1_enrutamiento_rutas.html" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="4_1_enrutamiento_rutas.html" class="btn btn-xs btn-link">
+        4.1 Enrutamiento: Rutas
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="3_3_corriendo_sencillo.html" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="3_3_corriendo_sencillo.html" class="btn btn-xs btn-link">
+        3.3. Corriendo una aplicación sencilla
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="estructura-de-nuestra-aplicacion"><strong>Estructura de nuestra aplicación</strong><a class="headerlink" href="#estructura-de-nuestra-aplicacion" title="Permanent link">&para;</a></h1>
+<p>Vamos a organizar nuestra aplicación web en un paquete con la siguiente estrucutra de directorios:
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>manage.py
+<span class="linenos" data-linenos="2 "></span>requirements.txt
+<span class="linenos" data-linenos="3 "></span>aplicacion
+<span class="linenos" data-linenos="4 "></span>    app.py
+<span class="linenos" data-linenos="5 "></span>    __init__.py
+</code></pre></div>
++ manage.py: Será el script que utilizaremos para gestionar la aplicación .
++ requirements.txt: Fichero con los módulos necesarios para nuestra aplicación funcione.
++ aplicacion: Paquete python (hemos creado el fichero <strong>init</strong>.py) donde vamos a guardar los ficheros de nuestra aplicación, por ahora guardamos el módulo principal app.py.</p>
+<h2 id="contenido-managepy"><strong>Contenido manage.py</strong><a class="headerlink" href="#contenido-managepy" title="Permanent link">&para;</a></h2>
+<p>El contenido del fichero manage.py será el siguiente:
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>from aplicacion.app import app
+<span class="linenos" data-linenos="2 "></span>
+<span class="linenos" data-linenos="3 "></span>if __name__ == &#39;__main__&#39;:
+<span class="linenos" data-linenos="4 "></span>    app.run(debug=True)
+</code></pre></div></p>
+<h2 id="contenido-apppy"><strong>Contenido app.py</strong><a class="headerlink" href="#contenido-apppy" title="Permanent link">&para;</a></h2>
+<p>El contenido del fichero app.py será el siguiente:
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>from flask import Flask
+<span class="linenos" data-linenos="2 "></span>from flask.cli import FlaskGroup
+<span class="linenos" data-linenos="3 "></span>
+<span class="linenos" data-linenos="4 "></span>app = Flask(__name__)   
+<span class="linenos" data-linenos="5 "></span>
+<span class="linenos" data-linenos="6 "></span>@app.route(&#39;/&#39;)
+<span class="linenos" data-linenos="7 "></span>def inicio():
+<span class="linenos" data-linenos="8 "></span>    return &#39;Página principal&#39;   
+</code></pre></div></p>
+<p>Como puedes observar dejamos todo el trabajo a app.py, donde controlaremos las rutas y los diferentes elementos, utilizando manage.py sólo como punto de entrada de la aplicación.</p>
+<p>Código ejemplo de esta unidad
+<a href="zip/codigo_3_4.zip">Código</a></p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="4_1_enrutamiento_rutas.html" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="4_1_enrutamiento_rutas.html" class="btn btn-xs btn-link">
+        4.1 Enrutamiento: Rutas
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="3_3_corriendo_sencillo.html" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="3_3_corriendo_sencillo.html" class="btn btn-xs btn-link">
+        3.3. Corriendo una aplicación sencilla
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content"><p>2022-2023 Jesús Vives - Licencia CC BY-NC-SA</p>
+  <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>

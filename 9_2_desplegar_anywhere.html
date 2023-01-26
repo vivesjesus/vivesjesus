@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    
+    <link rel="canonical" href="https://vivesjesus.github.io/iaw/9_2_desplegar_anywhere.html">
+    <link rel="shortcut icon" href="./img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>9.2 Despliegue de aplicación flask en hosting pythonanywhere - IMPLANTACIÓN APLICACIONES WEB</title>
+    <link href="./css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="./css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="./css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="./css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="./js/jquery-3.2.1.min.js"></script>
+    <script src="./js/bootstrap-3.3.7.min.js"></script>
+    <script src="./js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '.';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Despliegue de aplicaci\u00f3n flask en hosting pythonanywhere", url: "#_top", children: [
+              {title: "Configuraci\u00f3n de la base de datos", url: "#configuracion-de-la-base-de-datos" },
+              {title: "Configuraci\u00f3n de nuestra aplicaci\u00f3n", url: "#configuracion-de-nuestra-aplicacion" },
+              {title: "Despliegue de nuestra aplicaci\u00f3n", url: "#despliegue-de-nuestra-aplicacion" },
+              {title: "Creando una nueva aplicaci\u00f3n", url: "#creando-una-nueva-aplicacion" },
+          ]},
+        ];
+
+    </script>
+    <script src="./js/base.js"></script>
+      <script src="search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="9_3_desplegar_heroku.html" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="9_3_desplegar_heroku.html" class="btn btn-xs btn-link">
+        9.3 Despliegue de aplicación flask en un PaaS Heroku
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="9_1_desplegar_lamp.html" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="9_1_desplegar_lamp.html" class="btn btn-xs btn-link">
+        9.1 Despliegue de aplicación flask en un servidor LAMP
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="despliegue-de-aplicacion-flask-en-hosting-pythonanywhere">Despliegue de aplicación flask en hosting pythonanywhere<a class="headerlink" href="#despliegue-de-aplicacion-flask-en-hosting-pythonanywhere" title="Permanent link">&para;</a></h1>
+<p>En este ejemplo vamos a desplegar nuestra aplicación en un hosting que nos permite trabajar con python llamado <a href="https://www.pythonanywhere.com/">PythonAnywhere</a>, que nos ofrece distintos <a href="https://www.pythonanywhere.com/pricing/">planes de contratación</a>, aunque nosotros vamos a usar el <strong>Beginner</strong> que es gratuito y para aplicaciones de prueba con pocos accesos es suficiente.</p>
+<h2 id="configuracion-de-la-base-de-datos">Configuración de la base de datos<a class="headerlink" href="#configuracion-de-la-base-de-datos" title="Permanent link">&para;</a></h2>
+<p>PythonAnywhere nos da la posibilidad de trabajar con mysql y con postgres. En nuestro caso en la pestaña <code>Databases</code> del dashboard, vamos a crear una base de datos mysql con una base de datos: <code>josedom24$tienda</code>:</p>
+<p><img alt="bd" src="img/bd.png" /></p>
+<p>Por lo tanto tendremos que configurar nuestra aplicación, para indicar la nuevas credenciales de la base de datos, para ello modificamos el fichero <code>confi.py</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>SQLALCHEMY_DATABASE_URI = &#39;mysql+pymysql://josedom24:usuario1234@josedom24.mysql.pythonanywhere-services.com/josedom24$tienda&#39;
+</code></pre></div>
+<h2 id="configuracion-de-nuestra-aplicacion">Configuración de nuestra aplicación<a class="headerlink" href="#configuracion-de-nuestra-aplicacion" title="Permanent link">&para;</a></h2>
+<p>En este ejemplo vamos a modificar el fichero <code>app.wsgi</code> para indicar el directorio de trabajo, además no vamos activar el entrono virtual:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>import sys
+<span class="linenos" data-linenos="2 "></span>sys.path.insert(0, &#39;/home/josedom24/tienda_videojuegos&#39;)
+<span class="linenos" data-linenos="3 "></span>from aplicacion.app import app as application
+</code></pre></div>
+<h2 id="despliegue-de-nuestra-aplicacion">Despliegue de nuestra aplicación<a class="headerlink" href="#despliegue-de-nuestra-aplicacion" title="Permanent link">&para;</a></h2>
+<p>En la pestaña <code>Consoles</code> de PythonAnywhere podemos abrir consolas con los distintos interpretes python, con bash o con mysql, vamos a abrir una consola bash para comenzar el despliegue:</p>
+<p><img alt="consoles" src="img/consoles.png" /></p>
+<p><img alt="consoles2" src="img/consoles2.png" /></p>
+<p>Vamos a clonar nuestro repositorio, crear un repositorio e instalar las dependencias:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>$ git clone https://github.com/josedom24/tienda_videojuegos.git -b pythonanywhere
+<span class="linenos" data-linenos="2 "></span>$ mkvirtualenv --python=/usr/bin/python3.4 flask
+<span class="linenos" data-linenos="3 "></span>$ workon flask
+<span class="linenos" data-linenos="4 "></span>(flask)$ pip install -r tienda_videojuegos/requirements.txt
+</code></pre></div>
+<p>A continuación podemos crear las tablas, cargar los datos de ejemplo y crear el administrador:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>(flask)$ cd tienda_videojuegos
+<span class="linenos" data-linenos="2 "></span>(flask)$ python3 manage.py create_tables
+<span class="linenos" data-linenos="3 "></span>(flask)$ python3 manage.py add_data_tables
+<span class="linenos" data-linenos="4 "></span>(flask)$ python3 manage.py create_admin
+</code></pre></div>
+<p>Nota: Si queremos modificar cualquier fichero de nuestro proyecto lo podemos hacer desde la pestaña <code>Files</code>.</p>
+<h2 id="creando-una-nueva-aplicacion">Creando una nueva aplicación<a class="headerlink" href="#creando-una-nueva-aplicacion" title="Permanent link">&para;</a></h2>
+<p>Por último en la pestaña <code>Web</code> tenemos que crear una nueva aplicación:</p>
+<p>Elegimos la opción "Manual configuration" para poder indicar el entorno virtual que hemos creado:</p>
+<p><img alt="web1" src="img/web1.png" /></p>
+<p>Elegimos la versión de python (en este caso la misma con la que hemos creado el entorno virtual, python 3.4) y ya tenemos la aplicación creada. Sólo nos queda indicar la ruta donde se encuentra nuetro entorno virtual, en la sección <strong>Virtualenv</strong>:</p>
+<p><img alt="web2" src="img/web2.png" /></p>
+<p>Y modificar el fichero <code>/var/www/josedom24_pythonanywhere_com_wsgi.py</code> en el apartado "WSGI configuration file:" de la sección "Code":</p>
+<p><img alt="web3" src="img/web3.png" /></p>
+<p>Por último reiniciamos el servidor pulsando el botón "Reload ..." y accedemos a la página:</p>
+<p><img alt="web4" src="img/web4.png" /></p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="9_3_desplegar_heroku.html" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="9_3_desplegar_heroku.html" class="btn btn-xs btn-link">
+        9.3 Despliegue de aplicación flask en un PaaS Heroku
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="9_1_desplegar_lamp.html" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="9_1_desplegar_lamp.html" class="btn btn-xs btn-link">
+        9.1 Despliegue de aplicación flask en un servidor LAMP
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content"><p>2022-2023 Jesús Vives - Licencia CC BY-NC-SA</p>
+  <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>

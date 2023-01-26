@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    
+    <link rel="canonical" href="https://vivesjesus.github.io/iaw/6_3_listando_filtrando.html">
+    <link rel="shortcut icon" href="./img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>6.3 Listando y filtrando los registros de la base de datos - IMPLANTACIÓN APLICACIONES WEB</title>
+    <link href="./css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="./css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="./css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="./css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="./js/jquery-3.2.1.min.js"></script>
+    <script src="./js/bootstrap-3.3.7.min.js"></script>
+    <script src="./js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '.';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Listando y filtrando los registros de la base de datos", url: "#_top", children: [
+              {title: "Seleccionando registros en el programa principal", url: "#seleccionando-registros-en-el-programa-principal" },
+              {title: "Plantilla para mostrar el listado: inicio.html", url: "#plantilla-para-mostrar-el-listado-iniciohtml" },
+              {title: "Listado de categor\u00edas", url: "#listado-de-categorias" },
+              {title: "C\u00f3digo ejemplo de esta unidad", url: "#codigo-ejemplo-de-esta-unidad" },
+          ]},
+        ];
+
+    </script>
+    <script src="./js/base.js"></script>
+      <script src="search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="6_4_creando.html" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="6_4_creando.html" class="btn btn-xs btn-link">
+        6.4 Creando registros en la base de datos
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="6_2_modelos_BBDD.html" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="6_2_modelos_BBDD.html" class="btn btn-xs btn-link">
+        6.2 El modelo de base de datos
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="listando-y-filtrando-los-registros-de-la-base-de-datos">Listando y filtrando los registros de la base de datos<a class="headerlink" href="#listando-y-filtrando-los-registros-de-la-base-de-datos" title="Permanent link">&para;</a></h1>
+<p>En esta unidad vamos a seguir trabando en nuestro proyecto, vamos a listar los artículos y las categorías. Además vamos a poder seleccionar los artículos por categoría.</p>
+<h2 id="seleccionando-registros-en-el-programa-principal">Seleccionando registros en el programa principal<a class="headerlink" href="#seleccionando-registros-en-el-programa-principal" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>@app.route(&#39;/&#39;)
+<span class="linenos" data-linenos=" 2 "></span>@app.route(&#39;/categoria/&lt;id&gt;&#39;)
+<span class="linenos" data-linenos=" 3 "></span>def inicio(id=&#39;0&#39;):
+<span class="linenos" data-linenos=" 4 "></span>    categoria=Categorias.query.get(id)
+<span class="linenos" data-linenos=" 5 "></span>    if id==&#39;0&#39;:
+<span class="linenos" data-linenos=" 6 "></span>        articulos=Articulos.query.all()
+<span class="linenos" data-linenos=" 7 "></span>    else:
+<span class="linenos" data-linenos=" 8 "></span>        articulos=Articulos.query.filter_by(CategoriaId=id)
+<span class="linenos" data-linenos=" 9 "></span>    categorias=Categorias.query.all()
+<span class="linenos" data-linenos="10 "></span>    return render_template(&quot;inicio.html&quot;,articulos=articulos,categorias=categorias,categoria=categoria)
+</code></pre></div>
+<p>Ejecutamos esta función cuando accedemos a la página (ruta <code>/</code>) o cuando hemos seleccionado una determinada categoria (ruta <code>categorida/&lt;id&gt;</code>):</p>
+<ul>
+<li>Si accedemos a la página (ruta <code>/</code>) el identificado de la categoría será por defecto el 0, que corresponde a la categoría <code>Todos</code>. En este caso se seleccionaran todos los artículos.</li>
+<li>Si accedemos a la página seleccionando una categoría, se mandará el identificador de la categoría y se seleccionarán los videojuegos que tienen dicha categoría.</li>
+</ul>
+<p>En los dos casos se muestra una plantilla donde se muestran todas las categorías y los artículos seleccionados.</p>
+<p>Consideramos que la categoría 0:'Todos', debe existir al crear las tablas por lo tanto hemos modificado el fichero <code>manage.py</code> para crearla:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>@manager.command
+<span class="linenos" data-linenos="2 "></span>def create_tables():
+<span class="linenos" data-linenos="3 "></span>    &quot;Create relational database tables.&quot;
+<span class="linenos" data-linenos="4 "></span>    db.create_all()
+<span class="linenos" data-linenos="5 "></span>    categoria=Categorias(id=0,nombre=&quot;Todos&quot;)
+<span class="linenos" data-linenos="6 "></span>    db.session.add(categoria)
+<span class="linenos" data-linenos="7 "></span>    db.session.commit()
+</code></pre></div>
+<h2 id="plantilla-para-mostrar-el-listado-iniciohtml">Plantilla para mostrar el listado: <code>inicio.html</code><a class="headerlink" href="#plantilla-para-mostrar-el-listado-iniciohtml" title="Permanent link">&para;</a></h2>
+<p>Podemos diferenciar dos partes:</p>
+<ol>
+<li>
+<p>En primer lugar mostramos las categorías, como hemos enviado el nombre de la categoría seleccionada, podemos señalar la categoría por medio del CSS.</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>{% for cat in categorias %}
+<span class="linenos" data-linenos="2 "></span>  {% if categoria.nombre==cat.nombre%}
+<span class="linenos" data-linenos="3 "></span>    &lt;a class=&quot;list-group-item active&quot; href=&quot;{{url_for(&quot;inicio&quot;,id=cat.id)}}&quot;&gt;{{cat.nombre}}&lt;/a&gt;
+<span class="linenos" data-linenos="4 "></span>  {% else %}
+<span class="linenos" data-linenos="5 "></span>    &lt;a class=&quot;list-group-item&quot; href=&quot;{{url_for(&quot;inicio&quot;,id=cat.id)}}&quot;&gt;{{cat.nombre}}&lt;/a&gt;
+<span class="linenos" data-linenos="6 "></span>  {% endif%}
+<span class="linenos" data-linenos="7 "></span>{% endfor %}
+</code></pre></div>
+<p>Podemos seleccionar una categoría para filtrar los artículos.</p>
+</li>
+<li>
+<p>Mostramos los artículos seleccionados:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>{% for art in articulos %}  
+<span class="linenos" data-linenos=" 2 "></span>    &lt;tr&gt;
+<span class="linenos" data-linenos=" 3 "></span>    {% if art.image %}
+<span class="linenos" data-linenos=" 4 "></span>        &lt;td&gt;&lt;img src=&quot;{{url_for(&#39;static&#39;,filename=&#39;upload/&#39;)}}{{art.image}}&quot;/&gt;
+<span class="linenos" data-linenos=" 5 "></span>    {% else %}
+<span class="linenos" data-linenos=" 6 "></span>        &lt;td&gt;&lt;img src=&quot;{{url_for(&#39;static&#39;,filename=&#39;upload/not-found.png&#39;)}}&quot;/&gt;
+<span class="linenos" data-linenos=" 7 "></span>    {% endif %}
+<span class="linenos" data-linenos=" 8 "></span>        &lt;td&gt;{{art.nombre}}&lt;/td&gt;
+<span class="linenos" data-linenos=" 9 "></span>        &lt;td&gt;{{art.descripcion}}&lt;/td&gt;
+<span class="linenos" data-linenos="10 "></span>        &lt;td&gt;{{art.precio_final()}}&lt;/td&gt;
+<span class="linenos" data-linenos="11 "></span>        &lt;td&gt;&lt;a href=&quot;#&quot;&gt;&lt;span class=&quot;glyphicon glyphicon-shopping-cart&quot;&gt;&lt;/span&gt; Comprar&lt;/a&gt;&lt;/td&gt;
+<span class="linenos" data-linenos="12 "></span>    &lt;/tr&gt;
+<span class="linenos" data-linenos="13 "></span>{% endfor %}
+</code></pre></div>
+<p>Mostramos los distintos campos de los artículos. Cada artículo tiene una imagen que podemos subir al darlo de alta. Si no hemos subido ninguna imagen se muestra una por defecto. Los imágenes se van a guardar en el directorio <code>static/upload</code>.</p>
+<p>Hemos incluido un enlace en el listado de artículos para realizar la comprar aunque todavía no lo vamos a usar.</p>
+</li>
+</ol>
+<h2 id="listado-de-categorias">Listado de categorías<a class="headerlink" href="#listado-de-categorias" title="Permanent link">&para;</a></h2>
+<p>Hemos creado una página donde vamos a mostrar todas las categorías, para ello hemos incluido en enlace en la plantilla <code>base.html</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>&lt;a class=&quot;navbar-brand&quot; href=&quot;{{url_for(&#39;categorias&#39;)}}&quot;&gt;Categorías&lt;/a&gt;
+</code></pre></div>
+<p>En el programa principal:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>@app.route(&#39;/categorias&#39;)
+<span class="linenos" data-linenos="2 "></span>def categorias():
+<span class="linenos" data-linenos="3 "></span>    categorias=Categorias.query.all()
+<span class="linenos" data-linenos="4 "></span>    return render_template(&quot;categorias.html&quot;,categorias=categorias)
+</code></pre></div>
+<p>Y la plantilla <code>categorias.html</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>...
+<span class="linenos" data-linenos="2 "></span>{% for cat in categorias %}
+<span class="linenos" data-linenos="3 "></span>    &lt;tr&gt;
+<span class="linenos" data-linenos="4 "></span>      &lt;td&gt;{{cat.nombre}}&lt;/td&gt;
+<span class="linenos" data-linenos="5 "></span>    &lt;/tr&gt;
+<span class="linenos" data-linenos="6 "></span>{% endfor %}
+<span class="linenos" data-linenos="7 "></span>...
+</code></pre></div>
+<h2 id="codigo-ejemplo-de-esta-unidad">Código ejemplo de esta unidad<a class="headerlink" href="#codigo-ejemplo-de-esta-unidad" title="Permanent link">&para;</a></h2>
+<p><a href="../../ejemplos/u23">Código</a></p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="6_4_creando.html" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="6_4_creando.html" class="btn btn-xs btn-link">
+        6.4 Creando registros en la base de datos
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="6_2_modelos_BBDD.html" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="6_2_modelos_BBDD.html" class="btn btn-xs btn-link">
+        6.2 El modelo de base de datos
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content"><p>2022-2023 Jesús Vives - Licencia CC BY-NC-SA</p>
+  <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>

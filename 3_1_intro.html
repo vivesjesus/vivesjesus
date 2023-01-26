@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    
+    <link rel="canonical" href="https://vivesjesus.github.io/iaw/3_1_intro.html">
+    <link rel="shortcut icon" href="./img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>3.1. Introducción a flask - IMPLANTACIÓN APLICACIONES WEB</title>
+    <link href="./css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="./css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="./css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="./css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="./js/jquery-3.2.1.min.js"></script>
+    <script src="./js/bootstrap-3.3.7.min.js"></script>
+    <script src="./js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '.';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Introducci\u00f3n a flask", url: "#_top", children: [
+              {title: "\u00bfQu\u00e9 es un framework?", url: "#que-es-un-framework" },
+              {title: "\u00bfPor qu\u00e9 usar flask?", url: "#por-que-usar-flask" },
+              {title: "Extensiones flask", url: "#extensiones-flask" },
+          ]},
+        ];
+
+    </script>
+    <script src="./js/base.js"></script>
+      <script src="search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="3_2_instalacion_flask.html" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="3_2_instalacion_flask.html" class="btn btn-xs btn-link">
+        3.2. Instalación de flask
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="2_4_intro_web_py.html" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="2_4_intro_web_py.html" class="btn btn-xs btn-link">
+        2.4. Introducción a la programación web con python
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="introduccion-a-flask"><strong>Introducción a flask</strong><a class="headerlink" href="#introduccion-a-flask" title="Permanent link">&para;</a></h1>
+<ul>
+<li><a align="left" href="pdf/u5.pdf">Presentación de la Unidad</a></li>
+</ul>
+<p>Flask es un “micro” framework escrito en Python y concebido para facilitar el desarrollo de aplicaciones Web bajo el patrón MVC.</p>
+<h2 id="que-es-un-framework"><strong>¿Qué es un framework?</strong><a class="headerlink" href="#que-es-un-framework" title="Permanent link">&para;</a></h2>
+<hr />
+<p>Podemos definir framework como un esquema (un esqueleto, un patrón) para el desarrollo y/o la implementación de una aplicación. En general los framework están asociado a lenguajes de programación (Ruby on Rails (Ruby), Symphony (PHP),…).</p>
+<p>Las ventajas tiene utilizar un ‘framework’ pueden ser:</p>
+<ul>
+<li>El programador no necesita plantearse una estructura global de la aplicación, sino que el framework le proporciona un esqueleto que hay que “rellenar”.</li>
+<li>Facilita la colaboración. Cualquiera que haya tenido que “pelearse” con el código fuente de otro programador sabrá lo difícil que es entenderlo y modificarlo; por tanto, todo lo que sea definir y estandarizar va a ahorrar tiempo y trabajo a los desarrollos colaborativos.</li>
+<li>Es más fácil encontrar herramientas (utilidades, librerías) adaptadas al framework concreto para facilitar el desarrollo.
+Después de estudiar la unidad: Introducción a la programación web con python llegamos a la conclusión de que es necesario de utilizar un framework para ayudarnos a gestionar las peticiones y generar las respuestas correspondientes. Si utilizamos python como lenguaje de programación web tenemos a nuestra disposición un conjunto de framework: <a href="https://wiki.python.org/moin/WebFrameworks">Web Frameworks for Python.</a></li>
+</ul>
+<h2 id="por-que-usar-flask"><strong>¿Por qué usar flask?</strong><a class="headerlink" href="#por-que-usar-flask" title="Permanent link">&para;</a></h2>
+<hr />
+<ul>
+<li>Flask es un “micro” framework: se enfoca en proporcionar lo mínimo necesario para que puedas poner a funcionar una aplicación básica en cuestión de minutos. Se necesitamos más funcionalidades podemos extenderlo con las Flask extensions.</li>
+<li>Incluye un servidor web de desarrollo para que puedas probar tus aplicaciones sin tener que instalar un servidor web.</li>
+<li>También trae un depurador y soporte integrado para pruebas unitarias.</li>
+<li>Es compatible con python3, por lo tanto podemos usar la codificación de caracteres unicode, y 100% compatible con el estándar WSGI.</li>
+<li>Buen manejo de rutas: Con el uso de un decorador python podemos hacer que nuestra aplicación con URL simples y limpias.</li>
+<li>Flask soporta el uso de cookies seguras y el uso de sesiones.</li>
+<li>Flask se apoya en el motor de plantillas Jinja2, que nos permite de forma sencilla renderizar vistas y respuestas.</li>
+<li>Flask no tiene ORMs, wrappers o configuraciones complejas, eso lo convierte en un candidato ideal para aplicaciones ágiles o que no necesiten manejar ninguna dependencia. Si necesitas trabajar con base de datos sólo tenemos que utilizar una extensión.</li>
+<li>Este framework resulta ideal para construir servicios web (como APIs REST) o aplicaciones de contenido estático.
+Flask es Open Source y está amparado bajo una licencia BSD.</li>
+<li>Puedes ver el código en <a href="https://github.com/pallets/flask">Github</a>, <a href="https://flask-es.readthedocs.io/">la documentación</a> es muy completa y te puedes suscribir a su lista de correos para mantenerte al día de las actualizaciones.</li>
+</ul>
+<h2 id="extensiones-flask"><strong>Extensiones flask</strong><a class="headerlink" href="#extensiones-flask" title="Permanent link">&para;</a></h2>
+<hr />
+<p>Ya hemos visto la lista de extensiones que nos permite ampliar la funcionalidad de Flask, en este curso vamos a utilizar las siguientes:</p>
+<ul>
+<li>Flask-Script: La extensión flask-script nos proporciona la posibilidad de gestionar nuestra aplicación flask desde una comando (Interfaz de línea de comando).</li>
+<li>Flask-Bootstrap: si queremos trabajar con plantillas que utilicen como hoja de estilos y javascript el framework bootstrap podemos ulizar la extansión Flask-Bootstrap.</li>
+<li>Flask-WTF: Flask-WTF es una extensión de Flask que nos permite trabajar con la librería WTForm de python, que nos facilita la generación y validación de formularios HTML.</li>
+<li>Flask-Sqlalchemy: Usaremos la extensión Flask-SQLAlchemy que nos provee un wrapper para el proyecto SQLAlchemy, el cual es un Object Relational Mapper o ORM.</li>
+<li>Flask-Login: Flask-Login es una librería que nos proporciona la posibilidad de gestionar las sesiones de nuestros usuarios</li>
+</ul>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="3_2_instalacion_flask.html" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="3_2_instalacion_flask.html" class="btn btn-xs btn-link">
+        3.2. Instalación de flask
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="2_4_intro_web_py.html" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="2_4_intro_web_py.html" class="btn btn-xs btn-link">
+        2.4. Introducción a la programación web con python
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content"><p>2022-2023 Jesús Vives - Licencia CC BY-NC-SA</p>
+  <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>

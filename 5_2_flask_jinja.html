@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    
+    <link rel="canonical" href="https://vivesjesus.github.io/iaw/5_2_flask_jinja.html">
+    <link rel="shortcut icon" href="./img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>5.2 Generando páginas HTML con Flask y Jinja2 - IMPLANTACIÓN APLICACIONES WEB</title>
+    <link href="./css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="./css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="./css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="./css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="./js/jquery-3.2.1.min.js"></script>
+    <script src="./js/bootstrap-3.3.7.min.js"></script>
+    <script src="./js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '.';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Generando p\u00e1ginas HTML con Flask y Jinja2", url: "#_top", children: [
+              {title: "Plantilla simple", url: "#plantilla-simple" },
+              {title: "Env\u00edo de varias variables a una plantilla", url: "#envio-de-varias-variables-a-una-plantilla" },
+              {title: "Generando p\u00e1ginas de error con plantillas", url: "#generando-paginas-de-error-con-plantillas" },
+              {title: "Uso de for en una plantilla", url: "#uso-de-for-en-una-plantilla" },
+              {title: "Env\u00edo de diccionario a una plantilla", url: "#envio-de-diccionario-a-una-plantilla" },
+          ]},
+        ];
+
+    </script>
+    <script src="./js/base.js"></script>
+      <script src="search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="5_3_herencia_plan.html" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="5_3_herencia_plan.html" class="btn btn-xs btn-link">
+        5.3 Herencia de plantillas
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="5_1_plantillas_jinja.html" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="5_1_plantillas_jinja.html" class="btn btn-xs btn-link">
+        5.1. Plantillas con jinja2
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="generando-paginas-html-con-flask-y-jinja2"><strong>Generando páginas HTML con Flask y Jinja2</strong><a class="headerlink" href="#generando-paginas-html-con-flask-y-jinja2" title="Permanent link">&para;</a></h1>
+<p>Flask utiliza por defecto jinja2 para generar documentos HTML, para generar una plantilla utilizamos la función render_template que recibe como parámetro el fichero donde guardamos la plantilla y las variables que se pasan a esta.</p>
+<p>Las plantillas las vamos a guardar en ficheros en el directorio templates (dentro del directorio aplicacion). Así que primero crearemos el directorio template.</p>
+<h2 id="plantilla-simple"><strong>Plantilla simple</strong><a class="headerlink" href="#plantilla-simple" title="Permanent link">&para;</a></h2>
+<hr />
+<p>Veamos un ejemplo de cómo podemos generar HTML a partir de una plantilla en Flask, el programa será el siguiente:
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>...
+<span class="linenos" data-linenos="2 "></span>@app.route(&#39;/hola/&#39;)
+<span class="linenos" data-linenos="3 "></span>@app.route(&#39;/hola/&lt;nombre&gt;&#39;)
+<span class="linenos" data-linenos="4 "></span>def saluda(nombre=None):
+<span class="linenos" data-linenos="5 "></span>    return render_template(&quot;template1.html&quot;,nombre=nombre)
+</code></pre></div>
+La plantilla:</p>
+<h5 id="template1html"><strong>template1.html</strong><a class="headerlink" href="#template1html" title="Permanent link">&para;</a></h5>
+<p><div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>&lt;!DOCTYPE html&gt;
+<span class="linenos" data-linenos=" 2 "></span>&lt;html lang=&quot;es&quot;&gt;
+<span class="linenos" data-linenos=" 3 "></span>&lt;head&gt;
+<span class="linenos" data-linenos=" 4 "></span>&lt;title&gt;Hola, que tal {{nombre}}&lt;/title&gt;
+<span class="linenos" data-linenos=" 5 "></span>&lt;meta charset=&quot;utf-8&quot; /&gt;
+<span class="linenos" data-linenos=" 6 "></span>&lt;/head&gt;
+<span class="linenos" data-linenos=" 7 "></span>
+<span class="linenos" data-linenos=" 8 "></span>&lt;body&gt;
+<span class="linenos" data-linenos=" 9 "></span>    &lt;header&gt;
+<span class="linenos" data-linenos="10 "></span>       &lt;h1&gt;Mi sitio web&lt;/h1&gt;
+<span class="linenos" data-linenos="11 "></span>       &lt;p&gt;Mi sitio web creado en html5&lt;/p&gt;
+<span class="linenos" data-linenos="12 "></span>    &lt;/header&gt;
+<span class="linenos" data-linenos="13 "></span>    &lt;h2&gt;Vamos a saludar&lt;/h2&gt;
+<span class="linenos" data-linenos="14 "></span>    {% if nombre %}
+<span class="linenos" data-linenos="15 "></span>      &lt;h1&gt;Hola {{nombre|title}}&lt;/h1&gt;
+<span class="linenos" data-linenos="16 "></span>      &lt;p&gt;¿Cómo estás?&lt;/p&gt;
+<span class="linenos" data-linenos="17 "></span>    {%else%}
+<span class="linenos" data-linenos="18 "></span>      &lt;p&gt;No has indicado un nombre&lt;/p&gt;
+<span class="linenos" data-linenos="19 "></span>    {% endif %}
+<span class="linenos" data-linenos="20 "></span>&lt;/body&gt;
+<span class="linenos" data-linenos="21 "></span>&lt;/html&gt;
+</code></pre></div>
+Y la salida:</p>
+<p><img alt="template1" src="imagenes/template1.png" /></p>
+<h2 id="envio-de-varias-variables-a-una-plantilla"><strong>Envío de varias variables a una plantilla</strong><a class="headerlink" href="#envio-de-varias-variables-a-una-plantilla" title="Permanent link">&para;</a></h2>
+<hr />
+<p>En este caso veremos un ejemplo donde mandamos varias variables a la plantilla:
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>@app.route(&#39;/suma/&lt;num1&gt;/&lt;num2&gt;&#39;)
+<span class="linenos" data-linenos="2 "></span>def suma(num1,num2):
+<span class="linenos" data-linenos="3 "></span>    try:
+<span class="linenos" data-linenos="4 "></span>        resultado=int(num1)+int(num2)
+<span class="linenos" data-linenos="5 "></span>    except:
+<span class="linenos" data-linenos="6 "></span>        abort(404)
+<span class="linenos" data-linenos="7 "></span>    return render_template(&quot;template2.html&quot;,num1=num1,num2=num2,resultado=resultado)
+</code></pre></div>
+La plantilla:</p>
+<h5 id="template2html"><strong>template2.html</strong><a class="headerlink" href="#template2html" title="Permanent link">&para;</a></h5>
+<p><div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>...
+<span class="linenos" data-linenos="2 "></span>    &lt;h2&gt;Suma&lt;/h2&gt;
+<span class="linenos" data-linenos="3 "></span>    {% if resultado&gt;0 %}
+<span class="linenos" data-linenos="4 "></span>      &lt;p&gt;El resultado es positivo&lt;/p&gt;
+<span class="linenos" data-linenos="5 "></span>    {%else%}
+<span class="linenos" data-linenos="6 "></span>      &lt;p&gt;El resultado es negativo&lt;/p&gt;
+<span class="linenos" data-linenos="7 "></span>    {% endif %}
+<span class="linenos" data-linenos="8 "></span>    &lt;h3&gt;{{resultado}}&lt;/h3&gt;
+<span class="linenos" data-linenos="9 "></span>...
+</code></pre></div>
+Y la salida:</p>
+<p><img alt="template2" src="imagenes/template2.png" /></p>
+<h2 id="generando-paginas-de-error-con-plantillas"><strong>Generando páginas de error con plantillas</strong><a class="headerlink" href="#generando-paginas-de-error-con-plantillas" title="Permanent link">&para;</a></h2>
+<hr />
+<p>Como vemos en el ejemplo anterior, si los números no se pueden sumar se generara una respuesta 404, podemos también generar esta página a partir de una plantilla:
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>@app.errorhandler(404)
+<span class="linenos" data-linenos="2 "></span>def page_not_found(error):
+<span class="linenos" data-linenos="3 "></span>    return render_template(&quot;error.html&quot;,error=&quot;Página no encontrada...&quot;), 404
+</code></pre></div>
+La plantilla:</p>
+<h5 id="errorhtml"><strong>error.html</strong><a class="headerlink" href="#errorhtml" title="Permanent link">&para;</a></h5>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>...
+<span class="linenos" data-linenos="2 "></span>    &lt;header&gt;
+<span class="linenos" data-linenos="3 "></span>       &lt;h1&gt;{{error}}&lt;/h1&gt;
+<span class="linenos" data-linenos="4 "></span>       &lt;img src=&quot;{{ url_for(&#39;static&#39;, filename=&#39;img/tux.png&#39;)}}&quot;/&gt;
+<span class="linenos" data-linenos="5 "></span>    &lt;/header&gt;   
+<span class="linenos" data-linenos="6 "></span>...
+</code></pre></div>
+<h2 id="uso-de-for-en-una-plantilla"><strong>Uso de for en una plantilla</strong><a class="headerlink" href="#uso-de-for-en-una-plantilla" title="Permanent link">&para;</a></h2>
+<p>En este caso vamos a mostrar la tabla de multiplicar de un número, en la plantilla vamos a generar un bucle con 10 iteraciones usando el tipo de datos range:
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>@app.route(&#39;/tabla/&lt;numero&gt;&#39;)
+<span class="linenos" data-linenos="2 "></span>def tabla(numero):
+<span class="linenos" data-linenos="3 "></span>    try:
+<span class="linenos" data-linenos="4 "></span>        numero=int(numero)
+<span class="linenos" data-linenos="5 "></span>    except:
+<span class="linenos" data-linenos="6 "></span>        abort(404)
+<span class="linenos" data-linenos="7 "></span>    return render_template(&quot;template3.html&quot;,num=numero)
+</code></pre></div>
+La plantilla:</p>
+<h5 id="template3html"><strong>template3.html</strong><a class="headerlink" href="#template3html" title="Permanent link">&para;</a></h5>
+<p><div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>...
+<span class="linenos" data-linenos="2 "></span>    &lt;h2&gt;Tabla de multiplicar&lt;/h2&gt;
+<span class="linenos" data-linenos="3 "></span>    {% for i in range(1,11) -%}
+<span class="linenos" data-linenos="4 "></span>      &lt;p&gt;{{num}} * {{i}} = {{num*i}}&lt;/p&gt;
+<span class="linenos" data-linenos="5 "></span>    {% endfor -%}
+<span class="linenos" data-linenos="6 "></span>...
+</code></pre></div>
+Y la salida:</p>
+<p><img alt="template3" src="imagenes/template3.png" /></p>
+<h2 id="envio-de-diccionario-a-una-plantilla"><strong>Envío de diccionario a una plantilla</strong><a class="headerlink" href="#envio-de-diccionario-a-una-plantilla" title="Permanent link">&para;</a></h2>
+<p>En realidad vamos a mandar una lista de diccionarios, donde tenemos información para construir un enlace:
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>@app.route(&#39;/enlaces&#39;)
+<span class="linenos" data-linenos="2 "></span>def enlaces():
+<span class="linenos" data-linenos="3 "></span>    enlaces=[{&quot;url&quot;:&quot;http://www.google.es&quot;,&quot;texto&quot;:&quot;Google&quot;},
+<span class="linenos" data-linenos="4 "></span>            {&quot;url&quot;:&quot;http://www.twitter.com&quot;,&quot;texto&quot;:&quot;Twitter&quot;},
+<span class="linenos" data-linenos="5 "></span>            {&quot;url&quot;:&quot;http://www.facbook.com&quot;,&quot;texto&quot;:&quot;Facebook&quot;},
+<span class="linenos" data-linenos="6 "></span>            ]
+<span class="linenos" data-linenos="7 "></span>    return render_template(&quot;template4.html&quot;,enlaces=enlaces)
+</code></pre></div>
+La plantilla:</p>
+<h5 id="template4html"><strong>template4.html.</strong><a class="headerlink" href="#template4html" title="Permanent link">&para;</a></h5>
+<p><div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>...
+<span class="linenos" data-linenos=" 2 "></span>    &lt;h2&gt;Enlaces&lt;/h2&gt;
+<span class="linenos" data-linenos=" 3 "></span>    {% if enlaces %}
+<span class="linenos" data-linenos=" 4 "></span>    &lt;ul&gt;
+<span class="linenos" data-linenos=" 5 "></span>    {% for enlace in enlaces -%}
+<span class="linenos" data-linenos=" 6 "></span>      &lt;li&gt;&lt;a href=&quot;{{ enlace.url }}&quot;&gt;{{ enlace.texto }}&lt;/a&gt;&lt;/li&gt;
+<span class="linenos" data-linenos=" 7 "></span>    {% endfor -%}
+<span class="linenos" data-linenos=" 8 "></span>    &lt;/ul&gt;
+<span class="linenos" data-linenos=" 9 "></span>    {% else %}
+<span class="linenos" data-linenos="10 "></span>        &lt;p&gt;No hay enlaces&gt;&lt;/p&gt;
+<span class="linenos" data-linenos="11 "></span>    {% endif %}
+<span class="linenos" data-linenos="12 "></span>...
+</code></pre></div>
+Y la salida:</p>
+<p><img alt="template4" src="imagenes/template4.png" /></p>
+<p>Código ejemplo de esta unidad
+<a href="zip/codigo_5_2.zip">Código</a></p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="5_3_herencia_plan.html" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="5_3_herencia_plan.html" class="btn btn-xs btn-link">
+        5.3 Herencia de plantillas
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="5_1_plantillas_jinja.html" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="5_1_plantillas_jinja.html" class="btn btn-xs btn-link">
+        5.1. Plantillas con jinja2
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content"><p>2022-2023 Jesús Vives - Licencia CC BY-NC-SA</p>
+  <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>

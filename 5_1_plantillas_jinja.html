@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    
+    <link rel="canonical" href="https://vivesjesus.github.io/iaw/5_1_plantillas_jinja.html">
+    <link rel="shortcut icon" href="./img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>5.1. Plantillas con jinja2 - IMPLANTACIÓN APLICACIONES WEB</title>
+    <link href="./css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="./css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="./css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="./css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="./js/jquery-3.2.1.min.js"></script>
+    <script src="./js/bootstrap-3.3.7.min.js"></script>
+    <script src="./js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '.';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Plantillas con jinja2", url: "#_top", children: [
+              {title: "Una plantilla simple", url: "#una-plantilla-simple" },
+              {title: "Filtros de variables", url: "#filtros-de-variables" },
+              {title: "Instrucciones en las plantillas", url: "#instrucciones-en-las-plantillas" },
+          ]},
+        ];
+
+    </script>
+    <script src="./js/base.js"></script>
+      <script src="search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="5_2_flask_jinja.html" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="5_2_flask_jinja.html" class="btn btn-xs btn-link">
+        5.2 Generando páginas HTML con Flask y Jinja2
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="4_6_ejercicios.html" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="4_6_ejercicios.html" class="btn btn-xs btn-link">
+        4.6. Ejercicios
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="plantillas-con-jinja2"><strong>Plantillas con jinja2</strong><a class="headerlink" href="#plantillas-con-jinja2" title="Permanent link">&para;</a></h1>
+<p><a href="https://palletsprojects.com/p/jinja/">Jinja2</a> es un motor de plantilla desarrollado en Python. Flask utiliza jinja2 para generar documentos HTML válidos de una manera muy sencilla y eficiente.</p>
+<p>Por dependencias al instalar Flask instalamos jinja2. En esta unidad vamos a estudiar los elementos principales de jinja2, para más información accede a la documentación oficial de jinja2.</p>
+<h2 id="una-plantilla-simple"><strong>Una plantilla simple</strong><a class="headerlink" href="#una-plantilla-simple" title="Permanent link">&para;</a></h2>
+<hr />
+<p>Veamos un ejemplo para entender como funciona jinja2:</p>
+<p><div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>from jinja2 import Template
+<span class="linenos" data-linenos="2 "></span>
+<span class="linenos" data-linenos="3 "></span>temp1=&quot;Hola &quot;
+<span class="linenos" data-linenos="4 "></span>print(Template(temp1).render(nombre=&quot;Pepe&quot;))
+</code></pre></div>
+La salida es Hola Pepe. La plantilla se compone de una variable `` que es sustituida por el valor de la variable nombre al renderizar o generar la plantilla.</p>
+<p>Elementos de una plantillaPermalink
+Una plantilla puede estar formada por texto, y algunos de los siguientes elementos:</p>
+<ul>
+<li>Variables, se indican con {{ ... }}</li>
+<li>Instrucciones, se indican con {% ... %}</li>
+<li>Comentarios, se indican con {# ... #}</li>
+<li>Variables en las plantillasPermalink</li>
+<li>Las variables en la plantillas se sustituyen por los valores que se pasan a la plantilla al renderizarlas. Si enviamos una lista o un diccionario puedo acceder los valores de dos maneras:</li>
+</ul>
+<p>Veamos algunos ejemplos:
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>temp2=&#39;&lt;a href=&quot;&quot;&gt; &lt;/a&gt;&#39;
+<span class="linenos" data-linenos="2 "></span>print(Template(temp2).render(url=&quot;http://www.flask.com&quot;,enlace=&quot;Flask&quot;))    
+<span class="linenos" data-linenos="3 "></span>
+<span class="linenos" data-linenos="4 "></span>temp3=&#39;&lt;a href=&quot;&quot;&gt; &lt;/a&gt;&#39;
+<span class="linenos" data-linenos="5 "></span>print(Template(temp3).render(datos=[&quot;http://www.flask.com&quot;,&quot;Flask&quot;]))   
+<span class="linenos" data-linenos="6 "></span>
+<span class="linenos" data-linenos="7 "></span>temp4=&#39;&lt;a href=&quot;&quot;&gt; &lt;/a&gt;&#39;
+<span class="linenos" data-linenos="8 "></span>print(Template(temp4).render(datos={&quot;url&quot;:&quot;http://www.flask.com&quot;,&quot;enlace&quot;:&quot;Flask&quot;}))
+</code></pre></div></p>
+<p>El resultado de las tres plantillas es:
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>&lt;a href=&quot;http://www.flask.com&quot;&gt; Flask&lt;/a&gt;
+</code></pre></div></p>
+<h2 id="filtros-de-variables"><strong>Filtros de variables</strong><a class="headerlink" href="#filtros-de-variables" title="Permanent link">&para;</a></h2>
+<hr />
+<p>Un filtro me permite modificar una variable. Son distintas funciones que me modifican o calculan valores a partir de las variables, se indican separadas de las variables por | y si tienen parámetros se indican entre paréntesis. Veamos algunos ejemplos:
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>temp5=&#39;Hola &#39;
+<span class="linenos" data-linenos="2 "></span>print(Template(temp5).render(nombre=&quot;   pepe  &quot;))   
+<span class="linenos" data-linenos="3 "></span>
+<span class="linenos" data-linenos="4 "></span>temp6=&quot;los datos son {{ lista|join(&#39;, &#39;) }}&quot;
+<span class="linenos" data-linenos="5 "></span>print(Template(temp6).render(lista=[&quot;amarillo&quot;,&quot;verde&quot;,&quot;rojo&quot;]))    
+<span class="linenos" data-linenos="6 "></span>
+<span class="linenos" data-linenos="7 "></span>temp6=&quot;El ultimo elemento tiene  caracteres&quot;
+<span class="linenos" data-linenos="8 "></span>print(Template(temp6).render(lista=[&quot;amarillo&quot;,&quot;verde&quot;,&quot;rojo&quot;]))
+</code></pre></div>
+Por defecto los caracteres (&gt;, &lt;, &amp;, ") no se escapan, si queremos mostrarlo en nuestra página HTML tenemos que escapar los caracteres:
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>temp7=&quot;La siguiente cadena muestra todos los caracteres: &quot;
+<span class="linenos" data-linenos="2 "></span>print(Template(temp7).render(info=&quot;&lt;hola&amp;que&amp;tal&gt;&quot;))
+</code></pre></div>
+Y por tanto la salida es:
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>La siguiente cadena muestra todos los caracteres: &amp;lt;hola&amp;amp;que&amp;amp;tal&amp;gt;
+</code></pre></div>
+Para ver todos los filtros accede a la <a href="https://jinja.palletsprojects.com/en/3.1.x/templates/#builtin-filters">lista de filtros</a> en la documentación.</p>
+<h2 id="instrucciones-en-las-plantillas"><strong>Instrucciones en las plantillas</strong><a class="headerlink" href="#instrucciones-en-las-plantillas" title="Permanent link">&para;</a></h2>
+<hr />
+<h3 id="for"><strong>for</strong><a class="headerlink" href="#for" title="Permanent link">&para;</a></h3>
+<p>Nos permite recorrer una secuencia, veamos un ejemplo sencillo. Es compatible con la sentencia for de python.
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>temp7=&#39;&#39;&#39;
+<span class="linenos" data-linenos="2 "></span>&lt;ul&gt;
+<span class="linenos" data-linenos="3 "></span>{% for elem in elems -%}
+<span class="linenos" data-linenos="4 "></span>&lt;li&gt;{{loop.index}} - {{ elem }}&lt;/li&gt;
+<span class="linenos" data-linenos="5 "></span>{% endfor -%}
+<span class="linenos" data-linenos="6 "></span>&lt;/ul&gt;
+<span class="linenos" data-linenos="7 "></span>&#39;&#39;&#39;
+<span class="linenos" data-linenos="8 "></span>print(Template(temp7).render(elems=[&quot;amarillo&quot;,&quot;verde&quot;,&quot;rojo&quot;]))
+</code></pre></div>
+La salida es:
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>&lt;ul&gt;
+<span class="linenos" data-linenos="2 "></span>&lt;li&gt;1 - amarillo&lt;/li&gt;
+<span class="linenos" data-linenos="3 "></span>&lt;li&gt;2 - verde&lt;/li&gt;
+<span class="linenos" data-linenos="4 "></span>&lt;li&gt;3 - rojo&lt;/li&gt;
+<span class="linenos" data-linenos="5 "></span>&lt;/ul&gt;
+</code></pre></div>
+El - detrás del bloque for evita que se añada una línea en blanco.</p>
+<p>En un bloque for tenemos acceso a varias variables, veamos las más interesantes:</p>
+<ul>
+<li>loop.index: La iteración actual del bucle (empieza a contar desde 1).</li>
+<li>loop.index0: La iteración actual del bucle (empieza a contar desde 0).</li>
+<li>loop.first: True si estamos en la primera iteración.</li>
+<li>loop.last: True si estamos en la última iteración.</li>
+<li>loop.length: Número de iteraciones del bucle.</li>
+</ul>
+<h3 id="if"><strong>if</strong><a class="headerlink" href="#if" title="Permanent link">&para;</a></h3>
+<p>Nos permite preguntar por el valor de una variable o si una variable existe. Es compatible con la sentencia if de python.</p>
+<p>Ejemplo:
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>temp9=&#39;&#39;&#39;
+<span class="linenos" data-linenos=" 2 "></span>{% if elems %}
+<span class="linenos" data-linenos=" 3 "></span>&lt;ul&gt;
+<span class="linenos" data-linenos=" 4 "></span>{% for elem in elems -%}
+<span class="linenos" data-linenos=" 5 "></span>    {% if elem is divisibleby 2 -%}
+<span class="linenos" data-linenos=" 6 "></span>        &lt;li&gt;{{elem}} es divisible por 2.&lt;/li&gt;
+<span class="linenos" data-linenos=" 7 "></span>    {% else -%}
+<span class="linenos" data-linenos=" 8 "></span>        &lt;li&gt;{{elem}} no es divisible por 2.&lt;/li&gt;
+<span class="linenos" data-linenos=" 9 "></span>    {% endif -%}
+<span class="linenos" data-linenos="10 "></span>{% endfor -%}
+<span class="linenos" data-linenos="11 "></span>&lt;/ul&gt;
+<span class="linenos" data-linenos="12 "></span>{% endif %}
+<span class="linenos" data-linenos="13 "></span>&#39;&#39;&#39;
+<span class="linenos" data-linenos="14 "></span>print(Template(temp9).render(elems=[1,2,3,4]))
+</code></pre></div>
+Y la salida será:
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>&lt;ul&gt;
+<span class="linenos" data-linenos="2 "></span>    &lt;li&gt;1 no es divisible por 2.&lt;/li&gt;
+<span class="linenos" data-linenos="3 "></span>    &lt;li&gt;2 es divisible por 2.&lt;/li&gt;
+<span class="linenos" data-linenos="4 "></span>    &lt;li&gt;3 no es divisible por 2.&lt;/li&gt;
+<span class="linenos" data-linenos="5 "></span>    &lt;li&gt;4 es divisible por 2.&lt;/li&gt;
+<span class="linenos" data-linenos="6 "></span>&lt;/ul&gt;
+</code></pre></div>
+Tenemos un conjunto de tests para realizar comprobaciones, por ejemplo divisibleby devuelve True si un número es divible por el que indiquemos. Hay más tests que podemos utilizar. Para ver todos los tests accede a la lista de tests en la documentación.</p>
+<p>Código ejemplo de esta unidad
+<a href="zip/codigo_5_1.zip">Código</a></p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="5_2_flask_jinja.html" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="5_2_flask_jinja.html" class="btn btn-xs btn-link">
+        5.2 Generando páginas HTML con Flask y Jinja2
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="4_6_ejercicios.html" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="4_6_ejercicios.html" class="btn btn-xs btn-link">
+        4.6. Ejercicios
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content"><p>2022-2023 Jesús Vives - Licencia CC BY-NC-SA</p>
+  <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>

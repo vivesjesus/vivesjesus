@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    
+    <link rel="canonical" href="https://vivesjesus.github.io/iaw/8_1_cookies_carrito.html">
+    <link rel="shortcut icon" href="./img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>8.1 Uso de cookies para añadir artículos al carrito - IMPLANTACIÓN APLICACIONES WEB</title>
+    <link href="./css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="./css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="./css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="./css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="./js/jquery-3.2.1.min.js"></script>
+    <script src="./js/bootstrap-3.3.7.min.js"></script>
+    <script src="./js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '.';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Uso de cookies para a\u00f1adir art\u00edculos al carrito", url: "#_top", children: [
+              {title: "Manejo de cokies en flask", url: "#manejo-de-cokies-en-flask" },
+              {title: "Creaci\u00f3n del carrito de compra con cookies", url: "#creacion-del-carrito-de-compra-con-cookies" },
+              {title: "A\u00f1adir art\u00edculos al carrito de la compra", url: "#anadir-articulos-al-carrito-de-la-compra" },
+              {title: "Mostrar los art\u00edculos del carrito", url: "#mostrar-los-articulos-del-carrito" },
+              {title: "Borrar art\u00edculos del carrito", url: "#borrar-articulos-del-carrito" },
+              {title: "C\u00f3digo ejemplo de esta unidad", url: "#codigo-ejemplo-de-esta-unidad" },
+          ]},
+        ];
+
+    </script>
+    <script src="./js/base.js"></script>
+      <script src="search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="8_2_finalizar_compra.html" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="8_2_finalizar_compra.html" class="btn btn-xs btn-link">
+        8.2 Finalización de la compra
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="7_4_gestion_usu_flask_login.html" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="7_4_gestion_usu_flask_login.html" class="btn btn-xs btn-link">
+        7.4. Gestión de Usuarios con Flask-login
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="uso-de-cookies-para-anadir-articulos-al-carrito">Uso de cookies para añadir artículos al carrito<a class="headerlink" href="#uso-de-cookies-para-anadir-articulos-al-carrito" title="Permanent link">&para;</a></h1>
+<p>Las cookie son ficheros de texto con información, que el navegador guarda en memoria o en el disco duro, a solicitud del servidor.</p>
+<h2 id="manejo-de-cokies-en-flask">Manejo de cokies en flask<a class="headerlink" href="#manejo-de-cokies-en-flask" title="Permanent link">&para;</a></h2>
+<p>En flask tenemos que generar una respuesta HTTP que solicite la creación de una cookie en el cliente, para crear una cookie habrá que indicar un nombre y el valor (cadena de caracteres) que se guarda. De forma generar:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>@app.route(&#39;/set_cookie&#39;)
+<span class="linenos" data-linenos="2 "></span>def cookie_insertion():
+<span class="linenos" data-linenos="3 "></span>    redirect_to_index = redirect(&#39;/index&#39;)
+<span class="linenos" data-linenos="4 "></span>    response = current_app.make_response(redirect_to_index )  
+<span class="linenos" data-linenos="5 "></span>    response.set_cookie(&#39;cookie_name&#39;,value=&#39;values&#39;)
+<span class="linenos" data-linenos="6 "></span>    return response
+</code></pre></div>
+<p>En este caso realizamos una redirección guardando una cookie en el navegador.</p>
+<p>Para leer la información de una cokkie utilizaremos la siguiente instrucción:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>datos = request.cookies.get(&#39;cookie_name&#39;)
+</code></pre></div>
+<p>Para borrar una cookie lo haremos de la siguiente manera:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>response.set_cookie(&#39;cookie_name&#39;,value=&#39;&#39;,expires=0)
+</code></pre></div>
+<h2 id="creacion-del-carrito-de-compra-con-cookies">Creación del carrito de compra con cookies<a class="headerlink" href="#creacion-del-carrito-de-compra-con-cookies" title="Permanent link">&para;</a></h2>
+<p>En nuestro ejemplo vamos a guardar los datos del carrito de la compra en una cookie. Cuando compremos un videojuego vamos a indicar la cantidad que vamos a comprar, y si hay suficiente stock se guardará dicha información en la cookie.</p>
+<p>Vamos a utilizar JSON como lenguaje de marcas para guardar la información de los artículos que vamos añadiendo al carrito, de tal manera vamos a guardar una lista con los identificadores y la cantidad de cada artículo que vamos a comprar y el nombre que le vamos a dar a la cookie será el identificardor del usuario que está realizando la compra. Por ejemplo, el usuario con id 1 ha comprado dos artículos:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>datos=[{&quot;cantidad&quot;: 1, &quot;id&quot;: &quot;1&quot;}, {&quot;cantidad&quot;: 2, &quot;id&quot;: &quot;2&quot;}]
+</code></pre></div>
+<p>Si volvemos a seleccionar un artículo que está en el carrito previamente y cambiamos la cantidad habrá que actualizar el contenido de la cookie, de la misma manera que si borramos un artículo del carrito.</p>
+<p>En python el manejo de datos JSON se hace con tipos de datos listas y diccionarios, como en la cookie hay que guardar una cadena de caracteres, utilizaremos la siguiente función del módulo json`para convertir la lista de diccionarios en cadena de caracteres:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>json.dumps(datos)
+</code></pre></div>
+<p>Por ejemplo para crear una cookie con los datos de los artículos:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>resp.set_cookie(str(current_user.id),json.dumps(datos))
+</code></pre></div>
+<p>De forma similar cuando leemos la información de la cookie que es una cadena de caracteres y la queremos convertir a listas  y diccionarios, utilizaremos la siguiente función:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>json.loads(cadena)
+</code></pre></div>
+<p>Por lo tanto para leer la información de la cookie:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>datos = json.loads(request.cookies.get(str(current_user.id)))
+</code></pre></div>
+<h2 id="anadir-articulos-al-carrito-de-la-compra">Añadir artículos al carrito de la compra<a class="headerlink" href="#anadir-articulos-al-carrito-de-la-compra" title="Permanent link">&para;</a></h2>
+<p>Hemos creado una nueva ruta <code>/carrito/add/&lt;id&gt;</code> que recibe el identificador del artículo comprado (se ha añadido un enlace en el template <code>inicio.html</code>). Y realiza las siguiente acciones:</p>
+<ul>
+<li>Muestra el formulario <code>formCarrito</code> para indicar la cantidad de artículos que vamos a comprar.</li>
+<li>Si la cantidad indicada es menor que la cantidad de artículos que tenemos guardado en la base de datos, se lee la información anterior de la cookie.</li>
+<li>Ahora pueden pasar dos cosas: si el artículo ya existía en los datos de la cookie hay que actualizar el campo <code>cantidad</code> del diccionario, si el artículo no existe se añade un nuevo diccionario en la lista.</li>
+<li>Finalmente se crea una nueva cookie con la información actualizada.</li>
+</ul>
+<p>El código será el siguiente:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>@app.route(&#39;/carrito/add/&lt;id&gt;&#39;,methods=[&quot;get&quot;,&quot;post&quot;])
+<span class="linenos" data-linenos=" 2 "></span>@login_required
+<span class="linenos" data-linenos=" 3 "></span>def carrito_add(id):
+<span class="linenos" data-linenos=" 4 "></span>    art=Articulos.query.get(id) 
+<span class="linenos" data-linenos=" 5 "></span>    form=formCarrito()
+<span class="linenos" data-linenos=" 6 "></span>    form.id.data=id
+<span class="linenos" data-linenos=" 7 "></span>    if form.validate_on_submit():
+<span class="linenos" data-linenos=" 8 "></span>        if art.stock&gt;=int(form.cantidad.data):
+<span class="linenos" data-linenos=" 9 "></span>            try:
+<span class="linenos" data-linenos="10 "></span>                datos = json.loads(request.cookies.get(str(current_user.id)))
+<span class="linenos" data-linenos="11 "></span>            except:
+<span class="linenos" data-linenos="12 "></span>                datos = []
+<span class="linenos" data-linenos="13 "></span>            actualizar= False
+<span class="linenos" data-linenos="14 "></span>            for dato in datos:
+<span class="linenos" data-linenos="15 "></span>                if dato[&quot;id&quot;]==id:
+<span class="linenos" data-linenos="16 "></span>                    dato[&quot;cantidad&quot;]=form.cantidad.data
+<span class="linenos" data-linenos="17 "></span>                    actualizar = True
+<span class="linenos" data-linenos="18 "></span>            if not actualizar:
+<span class="linenos" data-linenos="19 "></span>                datos.append({&quot;id&quot;:form.id.data,&quot;cantidad&quot;:form.cantidad.data})
+<span class="linenos" data-linenos="20 "></span>            resp = make_response(redirect(url_for(&#39;inicio&#39;)))
+<span class="linenos" data-linenos="21 "></span>            resp.set_cookie(str(current_user.id),json.dumps(datos))
+<span class="linenos" data-linenos="22 "></span>            return resp
+<span class="linenos" data-linenos="23 "></span>        form.cantidad.errors.append(&quot;No hay artículos suficientes.&quot;)
+<span class="linenos" data-linenos="24 "></span>    return render_template(&quot;carrito_add.html&quot;,form=form,art=art)
+</code></pre></div>
+<h2 id="mostrar-los-articulos-del-carrito">Mostrar los artículos del carrito<a class="headerlink" href="#mostrar-los-articulos-del-carrito" title="Permanent link">&para;</a></h2>
+<p>Hemos creado una ruta <code>/carrito</code>, que nos muestra los artículos que hemos añadido al carrito. </p>
+<ul>
+<li>Vamos a leer los datos de la cookie.</li>
+<li>Recorremos los diccionarios de la lista, y vamos guardando cada objeto <code>Articulos</code> y la cantidad de cada uno de ellos que vamos a comprar.</li>
+<li>Vamos acumulando el precio total de la compra.</li>
+<li>Finalmente mandamos esta información a la plantilla <code>carrito.html</code> para que muestre la información.</li>
+</ul>
+<p>El código será el siguiente:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>@app.route(&#39;/carrito&#39;)
+<span class="linenos" data-linenos=" 2 "></span>@login_required
+<span class="linenos" data-linenos=" 3 "></span>def carrito():
+<span class="linenos" data-linenos=" 4 "></span>    try:
+<span class="linenos" data-linenos=" 5 "></span>        datos = json.loads(request.cookies.get(str(current_user.id)))
+<span class="linenos" data-linenos=" 6 "></span>    except:
+<span class="linenos" data-linenos=" 7 "></span>        datos = []
+<span class="linenos" data-linenos=" 8 "></span>    articulos=[]
+<span class="linenos" data-linenos=" 9 "></span>    cantidades=[]
+<span class="linenos" data-linenos="10 "></span>    total=0
+<span class="linenos" data-linenos="11 "></span>    for articulo in datos:
+<span class="linenos" data-linenos="12 "></span>        articulos.append(Articulos.query.get(articulo[&quot;id&quot;]))
+<span class="linenos" data-linenos="13 "></span>        cantidades.append(articulo[&quot;cantidad&quot;])
+<span class="linenos" data-linenos="14 "></span>        total=total+Articulos.query.get(articulo[&quot;id&quot;]).precio_final()*articulo[&quot;cantidad&quot;]
+<span class="linenos" data-linenos="15 "></span>    articulos=zip(articulos,cantidades)
+<span class="linenos" data-linenos="16 "></span>    return render_template(&quot;carrito.html&quot;,articulos=articulos,total=total)
+</code></pre></div>
+<p>Por otro lado hemos creado una variable <code>num_articulos</code> en el contexto de las plantillas, para que podamos acceder al número de artículos que hay en el carrito desde las plantilla, para eso:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>@app.context_processor
+<span class="linenos" data-linenos="2 "></span>def contar_carrito():
+<span class="linenos" data-linenos="3 "></span>    if not current_user.is_authenticated:
+<span class="linenos" data-linenos="4 "></span>        return {&#39;num_articulos&#39;:0}
+<span class="linenos" data-linenos="5 "></span>    if request.cookies.get(str(current_user.id))==None:
+<span class="linenos" data-linenos="6 "></span>        return {&#39;num_articulos&#39;:0}
+<span class="linenos" data-linenos="7 "></span>    else:
+<span class="linenos" data-linenos="8 "></span>        datos = json.loads(request.cookies.get(str(current_user.id)))
+<span class="linenos" data-linenos="9 "></span>        return {&#39;num_articulos&#39;:len(datos)}
+</code></pre></div>
+<p>Y en la cabecera de la página, plantilla <code>base.html</code> hemos añadido un contado de artículos:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>&lt;a class=&quot;navbar-brand &quot; href=&quot;/carrito&quot;&gt; Carrito &lt;span class=&quot;badge&quot;&gt;{{num_articulos}} &lt;/span&gt;&lt;/a&gt;
+</code></pre></div>
+<h2 id="borrar-articulos-del-carrito">Borrar artículos del carrito<a class="headerlink" href="#borrar-articulos-del-carrito" title="Permanent link">&para;</a></h2>
+<p>Hemos añadido un enlace en la plantilla <code>carrito.html</code> que nos permite borrar un artículo del carrito. dicho enlace nos lleva a la ruta <code>/carrito_delete/&lt;id&gt;</code> que realizará las siguientes acciones:</p>
+<ul>
+<li>Vamos a leer los datos de la cookie.</li>
+<li>Para borrar el diccionario correspondiente al identificador que hemos recibido, vamos a crear otra lista sin dicho diccionario.</li>
+<li>Finalmente vamos a guardar en la cookie la nueva lista.</li>
+</ul>
+<p>El código será el siguiente:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>@app.route(&#39;/carrito_delete/&lt;id&gt;&#39;)
+<span class="linenos" data-linenos=" 2 "></span>@login_required
+<span class="linenos" data-linenos=" 3 "></span>def carrito_delete(id):
+<span class="linenos" data-linenos=" 4 "></span>    try:
+<span class="linenos" data-linenos=" 5 "></span>        datos = json.loads(request.cookies.get(str(current_user.id)))
+<span class="linenos" data-linenos=" 6 "></span>    except:
+<span class="linenos" data-linenos=" 7 "></span>        datos = []
+<span class="linenos" data-linenos=" 8 "></span>    new_datos=[]
+<span class="linenos" data-linenos=" 9 "></span>    for dato in datos:
+<span class="linenos" data-linenos="10 "></span>        if dato[&quot;id&quot;]!=id:
+<span class="linenos" data-linenos="11 "></span>            new_datos.append(dato)
+<span class="linenos" data-linenos="12 "></span>    resp = make_response(redirect(url_for(&#39;carrito&#39;)))
+<span class="linenos" data-linenos="13 "></span>    resp.set_cookie(str(current_user.id),json.dumps(new_datos))
+<span class="linenos" data-linenos="14 "></span>    return resp
+</code></pre></div>
+<h2 id="codigo-ejemplo-de-esta-unidad">Código ejemplo de esta unidad<a class="headerlink" href="#codigo-ejemplo-de-esta-unidad" title="Permanent link">&para;</a></h2>
+<p><a href="../../ejemplos/u31">Código</a></p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="8_2_finalizar_compra.html" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="8_2_finalizar_compra.html" class="btn btn-xs btn-link">
+        8.2 Finalización de la compra
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="7_4_gestion_usu_flask_login.html" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="7_4_gestion_usu_flask_login.html" class="btn btn-xs btn-link">
+        7.4. Gestión de Usuarios con Flask-login
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content"><p>2022-2023 Jesús Vives - Licencia CC BY-NC-SA</p>
+  <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>

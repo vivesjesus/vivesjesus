@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    
+    <link rel="canonical" href="https://vivesjesus.github.io/iaw/3_2_instalacion_flask.html">
+    <link rel="shortcut icon" href="./img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>3.2. Instalación de flask - IMPLANTACIÓN APLICACIONES WEB</title>
+    <link href="./css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="./css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="./css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="./css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="./js/jquery-3.2.1.min.js"></script>
+    <script src="./js/bootstrap-3.3.7.min.js"></script>
+    <script src="./js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '.';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Instalaci\u00f3n  flask", url: "#_top", children: [
+              {title: "Creando el entorno virtual", url: "#creando-el-entorno-virtual" },
+          ]},
+        ];
+
+    </script>
+    <script src="./js/base.js"></script>
+      <script src="search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="3_3_corriendo_sencillo.html" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="3_3_corriendo_sencillo.html" class="btn btn-xs btn-link">
+        3.3. Corriendo una aplicación sencilla
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="3_1_intro.html" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="3_1_intro.html" class="btn btn-xs btn-link">
+        3.1. Introducción a flask
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="instalacion-flask"><strong>Instalación  flask</strong><a class="headerlink" href="#instalacion-flask" title="Permanent link">&para;</a></h1>
+<p>Vamos a realizar la instalación de Flask utilizando la herramienta pip en un entorno virtual creado con virtualenv. La instalación de Flask depende de dos paquetes: <a href="https://werkzeug.palletsprojects.com/en/2.2.x/">Werkzeug</a>, una librería WSGI para Python y <a href="https://jinja.palletsprojects.com/en/2.9.x/">jinja2</a> como motor de plantillas.</p>
+<h2 id="creando-el-entorno-virtual"><strong>Creando el entorno virtual</strong><a class="headerlink" href="#creando-el-entorno-virtual" title="Permanent link">&para;</a></h2>
+<hr />
+<p>Como Flask es compatible con python3 vamos a crear un entorno virtual compatible con la versión 3 del interprete python. Para ello nos aseguremos que tenemos la utilidad instalada:
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span># apt-get install python-virtualenv
+</code></pre></div>
+Y creamos el entorno virtual:
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>$ virtualenv -p /usr/bin/python3 flask
+</code></pre></div>
+Para activar nuestro entorno virtual:
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>$ source flask/bin/activate
+<span class="linenos" data-linenos="2 "></span>(flask)$ 
+</code></pre></div>
+Y a continuación instalamos Flask:
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>(flask)$ pip install Flask
+</code></pre></div>
+Si nos aparece el siguiente aviso durante la instalación:
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>WARNING: The C extension could not be compiled, speedups are not enabled.
+<span class="linenos" data-linenos="2 "></span>Failure information, if any, is above.
+<span class="linenos" data-linenos="3 "></span>Retrying the build without the C extension now.
+</code></pre></div>
+La instalación se realiza bien, pero no se habilita el aumento de rendimiento de jinja2.</p>
+<p>Puedes volver a realizar la instalación después de instalar el siguiente paquete:</p>
+<h4 id="apt-get-install-python3-dev">apt-get install python3-dev<a class="headerlink" href="#apt-get-install-python3-dev" title="Permanent link">&para;</a></h4>
+<p>Al finalizar podemos comprobar los paquetes python instalados:
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>(flask)$ pip freeze
+<span class="linenos" data-linenos="2 "></span>click==8.1.3
+<span class="linenos" data-linenos="3 "></span>Flask==2.2.2
+<span class="linenos" data-linenos="4 "></span>itsdangerous==2.1.2
+<span class="linenos" data-linenos="5 "></span>Jinja2==3.1.2
+<span class="linenos" data-linenos="6 "></span>MarkupSafe==2.1.1
+<span class="linenos" data-linenos="7 "></span>Werkzeug==2.2.2
+</code></pre></div>
+Podemos guardar las dependencias en un fichero requirements.txt:
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span># pip freeze &gt; requirements.txt
+</code></pre></div>
+La utilización del fichero ˋrequirements.txtˋ, donde vamos a ir guardando los paquetes python (y sus versiones) de nuestra instalación, nos va a posibilitar posteriormente poder crear otro entrono virtual con los mismos paquetes:
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span># pip install -r requirements.txt
+</code></pre></div>
+Y finalmente comprobamos la versión de flask que tenemos instalada:
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>(flask)$ flask --version
+<span class="linenos" data-linenos="2 "></span>Python 3.9.7
+<span class="linenos" data-linenos="3 "></span>Flask 2.2.2
+<span class="linenos" data-linenos="4 "></span>Werkzeug 2.2.2
+</code></pre></div></p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="3_3_corriendo_sencillo.html" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="3_3_corriendo_sencillo.html" class="btn btn-xs btn-link">
+        3.3. Corriendo una aplicación sencilla
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="3_1_intro.html" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="3_1_intro.html" class="btn btn-xs btn-link">
+        3.1. Introducción a flask
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content"><p>2022-2023 Jesús Vives - Licencia CC BY-NC-SA</p>
+  <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>

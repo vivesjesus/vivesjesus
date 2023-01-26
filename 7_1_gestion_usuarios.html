@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    
+    <link rel="canonical" href="https://vivesjesus.github.io/iaw/7_1_gestion_usuarios.html">
+    <link rel="shortcut icon" href="./img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>7.1 Gestión de usuarios con sesiones - IMPLANTACIÓN APLICACIONES WEB</title>
+    <link href="./css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="./css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="./css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="./css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="./js/jquery-3.2.1.min.js"></script>
+    <script src="./js/bootstrap-3.3.7.min.js"></script>
+    <script src="./js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '.';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Gesti\u00f3n de usuarios con sesiones", url: "#_top", children: [
+              {title: "El modelo de datos para guardar los usuarios", url: "#el-modelo-de-datos-para-guardar-los-usuarios" },
+              {title: "Creaci\u00f3n del usuario administrador", url: "#creacion-del-usuario-administrador" },
+              {title: "Autentficando usuarios en nuestra aplicaci\u00f3n", url: "#autentficando-usuarios-en-nuestra-aplicacion" },
+              {title: "C\u00f3digo ejemplo de esta unidad", url: "#codigo-ejemplo-de-esta-unidad" },
+          ]},
+        ];
+
+    </script>
+    <script src="./js/base.js"></script>
+      <script src="search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="7_2_nuevos_usaurios.html" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="7_2_nuevos_usaurios.html" class="btn btn-xs btn-link">
+        7.2 Registrando nuevos usuarios
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="6_6_borrando.html" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="6_6_borrando.html" class="btn btn-xs btn-link">
+        6.6. Borrando un Registro
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="gestion-de-usuarios-con-sesiones">Gestión de usuarios con sesiones<a class="headerlink" href="#gestion-de-usuarios-con-sesiones" title="Permanent link">&para;</a></h1>
+<p>En esta unidad vamos a introducir el concepto de sesión para posibilitar que los usuarios de nuestra página puedan loguearse en ella. Posteriormente veremos como autorizar el acceso a las distintas opciones de nuestra aplicación según el rol del usuario. En esta unidad vamos a trabajar directamente con sesiones, en una unidad posterior utilizarnos la extensión de Flask <code>flask-login</code> para realizar la autentificación.</p>
+<h2 id="el-modelo-de-datos-para-guardar-los-usuarios">El modelo de datos para guardar los usuarios<a class="headerlink" href="#el-modelo-de-datos-para-guardar-los-usuarios" title="Permanent link">&para;</a></h2>
+<p>Necesitamos una nueva tabla en nuestra base de datos para guardar los usuarios, para ello en nuestro modelo de datos (fichero <code>models.py</code>) añadimos la clase <code>Usuarios</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>class Usuarios(db.Model):
+<span class="linenos" data-linenos=" 2 "></span>    &quot;&quot;&quot;Usuarios&quot;&quot;&quot;
+<span class="linenos" data-linenos=" 3 "></span>    __tablename__ = &#39;usuarios&#39;
+<span class="linenos" data-linenos=" 4 "></span>    id = Column(Integer, primary_key=True)
+<span class="linenos" data-linenos=" 5 "></span>    username = Column(String(100),nullable=False)
+<span class="linenos" data-linenos=" 6 "></span>    password_hash = Column(String(128),nullable=False)
+<span class="linenos" data-linenos=" 7 "></span>    nombre = Column(String(200),nullable=False)
+<span class="linenos" data-linenos=" 8 "></span>    email = Column(String(200),nullable=False)
+<span class="linenos" data-linenos=" 9 "></span>    admin = Column(Boolean, default=False)
+<span class="linenos" data-linenos="10 "></span>
+<span class="linenos" data-linenos="11 "></span>    def __repr__(self):
+<span class="linenos" data-linenos="12 "></span>        return (u&#39;&lt;{self.__class__.__name__}: {self.id}&gt;&#39;.format(self=self))
+<span class="linenos" data-linenos="13 "></span>
+<span class="linenos" data-linenos="14 "></span>    @property
+<span class="linenos" data-linenos="15 "></span>    def password(self):
+<span class="linenos" data-linenos="16 "></span>        raise AttributeError(&#39;password is not a readable attribute&#39;)
+<span class="linenos" data-linenos="17 "></span>
+<span class="linenos" data-linenos="18 "></span>    @password.setter
+<span class="linenos" data-linenos="19 "></span>    def password(self, password):
+<span class="linenos" data-linenos="20 "></span>        self.password_hash = generate_password_hash(password)
+<span class="linenos" data-linenos="21 "></span>    def verify_password(self, password):
+<span class="linenos" data-linenos="22 "></span>        return check_password_hash(self.password_hash, password)
+</code></pre></div>
+<p>Algunas indicaciones interesantes:</p>
+<ul>
+<li>Los datos de usuario se van a guardar en una tabla llamada <code>usuarios</code>.</li>
+<li>Guardamos un identificador, un nombre de usuario, contraseña (que estará cifrada), el nombre, el correo electrónico y un valor lógico (admin) que nos indica si el usuario es administrador. Vamos a tener dos roles de usuarios; administradores y usuarios normales.</li>
+<li>Tenemos una propiedad <code>password</code>. Al intentar obtener su valor, nos devuelve una excepción indicado que no se puede leer, si intentamos modificarla, lo que realmente se hace es cifrarla en el atributo <code>password_hash</code> con la función <code>generate_password_hash</code> del módulo <code>werkzeug.security</code>.</li>
+<li>También tenemos un método <code>verify_password</code> que utilizando la función <code>check_password_hash</code> del módulo <code>werkzeug.security</code>, nos permite verificar si la contraseña guarda es igual a la indicada como parámetro.</li>
+</ul>
+<p>Tenemos que volver a generar las tablas para tener a nuestra disposición el nuevo modelo. Una vez realizada esta operación podemos hacer una prueba, creando un usuario:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>&gt;&gt;&gt; from aplicacion.app import db
+<span class="linenos" data-linenos=" 2 "></span>&gt;&gt;&gt; from aplicacion.models import Usuarios
+<span class="linenos" data-linenos=" 3 "></span>&gt;&gt;&gt; u=Usuarios()
+<span class="linenos" data-linenos=" 4 "></span>&gt;&gt;&gt; u.nombre=&quot;pepe&quot;
+<span class="linenos" data-linenos=" 5 "></span>&gt;&gt;&gt; u.password=&quot;asdasd&quot;
+<span class="linenos" data-linenos=" 6 "></span>&gt;&gt;&gt; u.username=&quot;pepe&quot;
+<span class="linenos" data-linenos=" 7 "></span>&gt;&gt;&gt; u.email=&quot;a@a.es&quot;
+<span class="linenos" data-linenos=" 8 "></span>&gt;&gt;&gt; db.session.add(u)
+<span class="linenos" data-linenos=" 9 "></span>&gt;&gt;&gt; db.session.commit()
+<span class="linenos" data-linenos="10 "></span>&gt;&gt;&gt; u.password_hash
+<span class="linenos" data-linenos="11 "></span>&gt;&gt;&gt; &#39;pbkdf2:sha256:50000$EFhxMbr1$ea8e6ddeaaac8d73d01f78f1b3d3120184cc25aea9491e632b4fc8c9ae2705cb&#39;
+<span class="linenos" data-linenos="12 "></span>&gt;&gt;&gt; u.password
+<span class="linenos" data-linenos="13 "></span>Traceback (most recent call last):
+<span class="linenos" data-linenos="14 "></span>  File &quot;&lt;stdin&gt;&quot;, line 1, in &lt;module&gt;
+<span class="linenos" data-linenos="15 "></span>  File &quot;/home/jose/github/curso_flask/ejemplos/u27/aplicacion/models.py&quot;, line 53, in password
+<span class="linenos" data-linenos="16 "></span>    raise AttributeError(&#39;password is not a readable attribute&#39;)
+<span class="linenos" data-linenos="17 "></span>AttributeError: password is not a readable attribute
+</code></pre></div>
+<h2 id="creacion-del-usuario-administrador">Creación del usuario administrador<a class="headerlink" href="#creacion-del-usuario-administrador" title="Permanent link">&para;</a></h2>
+<p>Para facilitar la creación de un primer usuario con rol administrador hemos introducido una nueva funcionalidad en nuestro script <code>manage.py</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>@manager.command
+<span class="linenos" data-linenos=" 2 "></span>def create_admin():
+<span class="linenos" data-linenos=" 3 "></span>    usuario={&quot;username&quot;:input(&quot;Usuario:&quot;),
+<span class="linenos" data-linenos=" 4 "></span>            &quot;password&quot;:getpass(&quot;Password:&quot;),
+<span class="linenos" data-linenos=" 5 "></span>            &quot;nombre&quot;:input(&quot;Nombre completo:&quot;),
+<span class="linenos" data-linenos=" 6 "></span>            &quot;email&quot;:input(&quot;Email:&quot;),
+<span class="linenos" data-linenos=" 7 "></span>            &quot;admin&quot;: True}
+<span class="linenos" data-linenos=" 8 "></span>    usu=Usuarios(**usuario)
+<span class="linenos" data-linenos=" 9 "></span>    db.session.add(usu)
+<span class="linenos" data-linenos="10 "></span>    db.session.commit()
+</code></pre></div>
+<p>Que nos pide los datos del usuario por teclado y crea un usuario administrador:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>$ python3 manage.py create_admin
+<span class="linenos" data-linenos="2 "></span>Usuario:
+<span class="linenos" data-linenos="3 "></span>...
+</code></pre></div>
+<h2 id="autentficando-usuarios-en-nuestra-aplicacion">Autentficando usuarios en nuestra aplicación<a class="headerlink" href="#autentficando-usuarios-en-nuestra-aplicacion" title="Permanent link">&para;</a></h2>
+<p>Una vez que tenemos preparado nuestro modelo de datos y utilizando sesiones vamos a programar la posibilidad de que un usuario se autentifique en nuestra aplicación y simulemos una sesión en ella hasta que salga del sistema. Para ello vamos a realizar los siguientes pasos:</p>
+<ul>
+<li>
+<p>El formulario <code>LoginForm</code> nos va posibilitar pedir nombre de usuario y contraseña para verificar si es un usuario correcto, por lo tanto en el fichero <code>forms.py</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>class LoginForm(FlaskForm):
+<span class="linenos" data-linenos="2 "></span>    username = StringField(&#39;Login&#39;, validators=[Required()])
+<span class="linenos" data-linenos="3 "></span>    password = PasswordField(&#39;Password&#39;, validators=[Required()])
+<span class="linenos" data-linenos="4 "></span>    submit = SubmitField(&#39;Entrar&#39;)
+</code></pre></div>
+</li>
+<li>
+<p>Flask nos permite trabajar con sesiones, hemos creado un fichero <code>login.py</code> con el siguiente contenido:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>def login_user(Usuario):
+<span class="linenos" data-linenos="2 "></span>    session[&quot;id&quot;]=Usuario.id
+<span class="linenos" data-linenos="3 "></span>    session[&quot;username&quot;]=Usuario.username
+<span class="linenos" data-linenos="4 "></span>    session[&quot;admin&quot;]=Usuario.admin
+<span class="linenos" data-linenos="5 "></span>
+<span class="linenos" data-linenos="6 "></span>def logout_user():
+<span class="linenos" data-linenos="7 "></span>    session.pop(&quot;id&quot;,None)
+<span class="linenos" data-linenos="8 "></span>    session.pop(&quot;username&quot;,None)
+<span class="linenos" data-linenos="9 "></span>    session.pop(&quot;admin&quot;,None)
+</code></pre></div>
+<p>Cuando un usuario se haya logueado de manera adecuada, utilizaremos la función <code>login_user</code> para crear variables de sesiones con la información del identificador, el nombre de usuario y su rol. si el usuario sale del sistema se utilizará la función <code>logout_user</code> para borrar dichas variables y terminar la sesión.</p>
+</li>
+<li>
+<p>Por lo tanto si existe alguna de las variables <code>session</code> tendremos un usuario logueado en el sistema. Esta variable es accesible desde las plantillas, por lo tanto en la plantilla <code>base.html</code> podemos introducir el siguiente código:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>{% if session[&quot;id&quot;] %}
+<span class="linenos" data-linenos="2 "></span>  &lt;a class=&quot;navbar-brand &quot; href=&quot;/logout&quot;&gt; Hola, {{ session[&quot;username&quot;]}} (Salir)&lt;/a&gt;
+<span class="linenos" data-linenos="3 "></span>{% else %}
+<span class="linenos" data-linenos="4 "></span>  &lt;a class=&quot;navbar-brand &quot; href=&quot;/login&quot;&gt;Login&lt;/a&gt;
+<span class="linenos" data-linenos="5 "></span>{% endif %}
+</code></pre></div>
+<p>Si existe la variable <code>session["id"]</code> tenemos un usuario en el sistema: ponemos su nombre de usuario y un enlace a "Salir". Si esa variable no existe ponemos un enlace para posibilitar que el usuario introduzca sus credenciales.</p>
+</li>
+<li>
+<p>En el programa principal, creamos una ruta <code>login</code> que muestra el formulario de login, si mandamos el formulario con éxito busca el usuario en la base de datos y comprueba la contraseña indicada si todo es correcto crea la sesión con la función <code>login_user()</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>@app.route(&#39;/login&#39;, methods=[&#39;get&#39;, &#39;post&#39;])
+<span class="linenos" data-linenos=" 2 "></span>def login():
+<span class="linenos" data-linenos=" 3 "></span>    form = LoginForm()
+<span class="linenos" data-linenos=" 4 "></span>    if form.validate_on_submit():
+<span class="linenos" data-linenos=" 5 "></span>        user=Usuarios.query.filter_by(username=form.username.data).first()
+<span class="linenos" data-linenos=" 6 "></span>        if user!=None and user.verify_password(form.password.data):
+<span class="linenos" data-linenos=" 7 "></span>            login_user(user)
+<span class="linenos" data-linenos=" 8 "></span>            return redirect(url_for(&#39;inicio&#39;))
+<span class="linenos" data-linenos=" 9 "></span>
+<span class="linenos" data-linenos="10 "></span>        form.username.errors.append(&quot;Usuario o contraseña incorrectas.&quot;)
+<span class="linenos" data-linenos="11 "></span>    return render_template(&#39;login.html&#39;, form=form)
+</code></pre></div>
+</li>
+<li>
+<p>También hemos creado una ruta <code>logout</code> que nos permite al usuario terminar la sesión utilizando la función `logout_user():</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>@app.route(&quot;/logout&quot;)
+<span class="linenos" data-linenos="2 "></span>def logout():
+<span class="linenos" data-linenos="3 "></span>    logout_user()
+<span class="linenos" data-linenos="4 "></span>    return redirect(url_for(&#39;login&#39;))
+</code></pre></div>
+</li>
+</ul>
+<p>En la siguiente unidad veremos como posibilitar que los usuarios se registren en nuestra aplicación, creando nuevos usuarios y posteriormente veremos como autorizar las distintas operaciones que puede realizar un usuario según su rol.</p>
+<h2 id="codigo-ejemplo-de-esta-unidad">Código ejemplo de esta unidad<a class="headerlink" href="#codigo-ejemplo-de-esta-unidad" title="Permanent link">&para;</a></h2>
+<p><a href="../../ejemplos/u27">Código</a></p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="7_2_nuevos_usaurios.html" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="7_2_nuevos_usaurios.html" class="btn btn-xs btn-link">
+        7.2 Registrando nuevos usuarios
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="6_6_borrando.html" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="6_6_borrando.html" class="btn btn-xs btn-link">
+        6.6. Borrando un Registro
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content"><p>2022-2023 Jesús Vives - Licencia CC BY-NC-SA</p>
+  <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>

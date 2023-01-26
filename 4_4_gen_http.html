@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    
+    <link rel="canonical" href="https://vivesjesus.github.io/iaw/4_4_gen_http.html">
+    <link rel="shortcut icon" href="./img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>4.4 Generando respuestas HTTP, respuestas de error y redirecciones - IMPLANTACIÓN APLICACIONES WEB</title>
+    <link href="./css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="./css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="./css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="./css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="./js/jquery-3.2.1.min.js"></script>
+    <script src="./js/bootstrap-3.3.7.min.js"></script>
+    <script src="./js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '.';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Generando respuestas HTTP, respuestas de error y redirecciones", url: "#_top", children: [
+              {title: "Ejemplo de respuestas", url: "#ejemplo-de-respuestas" },
+              {title: "Respuestas de error", url: "#respuestas-de-error" },
+              {title: "Redirecciones", url: "#redirecciones" },
+          ]},
+        ];
+
+    </script>
+    <script src="./js/base.js"></script>
+      <script src="search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="4_5_contenido_estatico.html" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="4_5_contenido_estatico.html" class="btn btn-xs btn-link">
+        4.5. Contenido Estático
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="4_3_trabajando_peticiones.html" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="4_3_trabajando_peticiones.html" class="btn btn-xs btn-link">
+        4.3 Trabajando con peticiones HTTP
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="generando-respuestas-http-respuestas-de-error-y-redirecciones"><strong>Generando respuestas HTTP, respuestas de error y redirecciones</strong><a class="headerlink" href="#generando-respuestas-http-respuestas-de-error-y-redirecciones" title="Permanent link">&para;</a></h1>
+<p>El decorador router gestiona la petición HTTP recibida y crea un objeto reponse con la respuesta HTTP: el código de estado, las cabaceras y los datos devueltos. Esta respuesta la prepara a partir de lo que devuelve la función vista ejecutada con cada route. Estas funciones pueden devolver tres tipos de datos:</p>
+<ul>
+<li>Una cadena, o la generación de una plantilla (que veremos posteriormente). Por defecto se indica un código 200 y las cabeceras por defecto.</li>
+<li>Un objeto de la clase response generado con la función make_repsonse, que recibe los datos devueltos, el código de estado y las cabeceras.</li>
+<li>Una tupla con los mismos datos: datos, cabeceras y código de respuesta.</li>
+</ul>
+<h2 id="ejemplo-de-respuestas"><strong> Ejemplo de respuestas</strong><a class="headerlink" href="#ejemplo-de-respuestas" title="Permanent link">&para;</a></h2>
+<hr />
+<p>Veamos el siguiente código:
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>from flask import Flask, request, make_response, abort, redirect, url_for
+<span class="linenos" data-linenos=" 2 "></span>...
+<span class="linenos" data-linenos=" 3 "></span>@app.route(&#39;/string/&#39;)
+<span class="linenos" data-linenos=" 4 "></span>def return_string():
+<span class="linenos" data-linenos=" 5 "></span>    return &#39;Hello, world!&#39;  
+<span class="linenos" data-linenos=" 6 "></span>
+<span class="linenos" data-linenos=" 7 "></span>@app.route(&#39;/object/&#39;)
+<span class="linenos" data-linenos=" 8 "></span>def return_object():
+<span class="linenos" data-linenos=" 9 "></span>    headers = {&#39;Content-Type&#39;: &#39;text/plain&#39;}
+<span class="linenos" data-linenos="10 "></span>    return make_response(&#39;Hello, world!&#39;, 200,headers)  
+<span class="linenos" data-linenos="11 "></span>
+<span class="linenos" data-linenos="12 "></span>@app.route(&#39;/tuple/&#39;)
+<span class="linenos" data-linenos="13 "></span>def return_tuple():
+<span class="linenos" data-linenos="14 "></span>    return &#39;Hello, world!&#39;, 200, {&#39;Content-Type&#39;:&#39;text/plain&#39;}
+</code></pre></div>
+Puedes comprobar que devuelve cada una de las rutas.</p>
+<h2 id="respuestas-de-error"><strong> Respuestas de error </strong><a class="headerlink" href="#respuestas-de-error" title="Permanent link">&para;</a></h2>
+<hr />
+<p>Si queremos que en cualquier momento devolver una respuesta HTTP de error podemos utilizar la función abort:
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>@app.route(&#39;/login&#39;)
+<span class="linenos" data-linenos="2 "></span>def login():
+<span class="linenos" data-linenos="3 "></span>    abort(401)
+<span class="linenos" data-linenos="4 "></span>    # Esta línea no se ejecuta
+</code></pre></div>
+Y lo comprobamos:
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>curl  http://localhost:5000/login   
+<span class="linenos" data-linenos="2 "></span>
+<span class="linenos" data-linenos="3 "></span>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 3.2 Final//EN&quot;&gt;
+<span class="linenos" data-linenos="4 "></span>&lt;title&gt;401 Unauthorized&lt;/title&gt;
+<span class="linenos" data-linenos="5 "></span>&lt;h1&gt;Unauthorized&lt;/h1&gt;
+<span class="linenos" data-linenos="6 "></span>&lt;p&gt;The server could not verify that you are authorized to access the URL requested.  You either supplied the wrong credentials (e.g. a bad password), or your browser doesn&#39;t understand how to supply the credentials required.&lt;/p&gt;
+</code></pre></div>
+Si queremos responder de la misma manera un determinado código de estado, por ejemplo queremos devolver una respuesta determinada cuando no se encuentra un recurso:
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>@app.errorhandler(404)
+<span class="linenos" data-linenos="2 "></span>def page_not_found(error):
+<span class="linenos" data-linenos="3 "></span>    return &#39;Página no encontrada...&#39;, 404
+<span class="linenos" data-linenos="4 "></span>
+<span class="linenos" data-linenos="5 "></span>curl  http://localhost:5000/PaginaNoExiste 
+<span class="linenos" data-linenos="6 "></span>Página no encontrada...
+</code></pre></div></p>
+<h2 id="redirecciones"><strong> Redirecciones </strong><a class="headerlink" href="#redirecciones" title="Permanent link">&para;</a></h2>
+<hr />
+<p>Si queremos realizar una redicirección HTTP a otra URL utilizamos la función redirect:
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>@app.route(&#39;/&#39;)
+<span class="linenos" data-linenos="2 "></span>def index():
+<span class="linenos" data-linenos="3 "></span>    return redirect(url_for(&#39;return_string&#39;))
+</code></pre></div>
+Código ejemplo de esta unidad
+<a href="zip/codigo_4_4.zip">Código</a></p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="4_5_contenido_estatico.html" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="4_5_contenido_estatico.html" class="btn btn-xs btn-link">
+        4.5. Contenido Estático
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="4_3_trabajando_peticiones.html" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="4_3_trabajando_peticiones.html" class="btn btn-xs btn-link">
+        4.3 Trabajando con peticiones HTTP
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content"><p>2022-2023 Jesús Vives - Licencia CC BY-NC-SA</p>
+  <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>

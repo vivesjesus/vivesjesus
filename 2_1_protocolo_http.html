@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    
+    <link rel="canonical" href="https://vivesjesus.github.io/iaw/2_1_protocolo_http.html">
+    <link rel="shortcut icon" href="./img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>2.1. Protocolo HTTP - IMPLANTACIÓN APLICACIONES WEB</title>
+    <link href="./css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="./css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="./css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="./css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="./js/jquery-3.2.1.min.js"></script>
+    <script src="./js/bootstrap-3.3.7.min.js"></script>
+    <script src="./js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '.';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Protocolo HTTP", url: "#_top", children: [
+              {title: "Descripci\u00f3n general", url: "#descripcion-general" },
+              {title: "Funcionamiento del protocolo", url: "#funcionamiento-del-protocolo" },
+              {title: "M\u00e9todos de env\u00edo de los datos", url: "#metodos-de-envio-de-los-datos" },
+              {title: "Cabeceras", url: "#cabeceras" },
+              {title: "Cookies", url: "#cookies" },
+              {title: "Sesiones", url: "#sesiones" },
+          ]},
+        ];
+
+    </script>
+    <script src="./js/base.js"></script>
+      <script src="search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="2_2_web_dinamica.html" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="2_2_web_dinamica.html" class="btn btn-xs btn-link">
+        2.2 Programación web dinámica
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="index.html" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="index.html" class="btn btn-xs btn-link">
+        1. INTRODUCCIÓN AL CURSO
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="protocolo-http"><strong>Protocolo HTTP</strong><a class="headerlink" href="#protocolo-http" title="Permanent link">&para;</a></h1>
+<ul>
+<li><a align="left" href="pdf/u1.pdf">Presentación de la Unidad</a></li>
+</ul>
+<h2 id="descripcion-general"><strong>Descripción general</strong><a class="headerlink" href="#descripcion-general" title="Permanent link">&para;</a></h2>
+<hr />
+<p>Protocolo de comunicaciones estándar que comunica servidores, proxys y clientes. Permite la transferencia de documentos web, sin importar cual es el cliente o cual es el servidor.</p>
+<p>Es un protocolo basado en el esquema petición/respuesta. El cliente realiza una petición y el servido devuelve una respuesta.</p>
+<p>El protocolo HTTP está basado en mensajes de texto plano y es un protocolo sin manejo de estados.</p>
+<h2 id="funcionamiento-del-protocolo"><strong>Funcionamiento del protocolo</strong><a class="headerlink" href="#funcionamiento-del-protocolo" title="Permanent link">&para;</a></h2>
+<hr />
+<p>El usuario escribe una URL, indicando el protocolo, servidor y recurso que quiere obtener, el servidor procesa dicha información y devuelve un mensaje de respuesta, normalmente con el HTML de la página que se va a visualizar,…</p>
+<p>El contenido del mensaje según sea la petición o la respuesta lo podemos ver en el siguiente esquema:</p>
+<p><img alt="imagen" src="imagenes/dia1.png" /></p>
+<h2 id="metodos-de-envio-de-los-datos"><strong>Métodos de envío de los datos</strong><a class="headerlink" href="#metodos-de-envio-de-los-datos" title="Permanent link">&para;</a></h2>
+<hr />
+<p>Cuando se realiza una petición se puede utilizar uno de los siguientes métodos:</p>
+<ul>
+<li>GET: Solicita un documento al servidor. Se pueden enviar datos en la URL.</li>
+<li>HEAD: Similar a GET, pero sólo pide las cabeceras HTTP.</li>
+<li>POST: Manda datos al servidor para su procesado.Similar a GET, pero además envía datos en el cuerpo del mensaje.</li>
+<li>PUT: Almacena el documento enviado en el cuerpo del mensaje.</li>
+<li>DELETE: Elimina el documento referenciado en la URL.
+…
+Código de estados
+Cuando el servidor devuelve una respuesta se indica un código de estado:</li>
+</ul>
+<p><img alt="imagen" src="imagenes/dia2.png" /></p>
+<h2 id="cabeceras"><strong>Cabeceras</strong><a class="headerlink" href="#cabeceras" title="Permanent link">&para;</a></h2>
+<hr />
+<p>Tanto la petición como las respuestas tienen una serie de metainformación llamadas cabeceras, podemos indicar las más importantes:</p>
+<ul>
+<li>Server: indica el tipo de servidor HTTP empleado.</li>
+<li>Age: indica el tiempo que ha estado el objeto servido almacenado en un proxy cache (en segundos)</li>
+<li>Cache-control: lo usa el servidor para decirle al navegador que objetos cachear, durante cuanto tiempo, etc..</li>
+<li>Content-Encoding: se indica el tipo de codificación empleado en la respuesta</li>
+<li>Expires: indica una fecha y hora a partir del cual la respuesta HTTP se considera obsoleta. Usado para gestionar caché.</li>
+<li>Location: usado para especificar una nueva ubicación en casos de redirecciones.</li>
+<li>Set-Cookie: sirve para crear cookies. Las famosos cookies viajan entre el servidor y el navegador a través de estas cabeceras HTTP.</li>
+</ul>
+<h2 id="cookies"><strong>Cookies</strong><a class="headerlink" href="#cookies" title="Permanent link">&para;</a></h2>
+<hr />
+<p>Las cookie son información que el navegador guarda en memoria o en el disco duro dentro de ficheros de texto, a solicitud del servidor. Incluyen datos generados por el servidor, o datos introducidos en un formulario por el usuario, enviados al servidor y reenviados por éste al cliente.</p>
+<p>HTTP es un protocolo sin estados (no almacena el estado de la sesión entre peticiones sucesivas), las cookies pueden usarse para asociar estado. Proporcionan una manera de conservar cierta información entre peticiones del cliente.</p>
+<p>Ejemplos de uso:</p>
+<ul>
+<li>Guarda información de la sesión.</li>
+<li>Comercio electrónico.</li>
+<li>Carrito de la compra.</li>
+<li>Personalización de páginas</li>
+<li>Idiomas</li>
+<li>Seguimiento de las visitas a un Web</li>
+<li>Carteles publicitarios</li>
+<li>Almacenamiento del login y password</li>
+</ul>
+<h2 id="sesiones"><strong>Sesiones</strong><a class="headerlink" href="#sesiones" title="Permanent link">&para;</a></h2>
+<hr />
+<p>HTTP es un protocolo sin manejo de estados. Las sesiones son fundamentales en las aplicaciones Web. Permiten:</p>
+<ul>
+<li>Definir varios estados distintos en la aplicación.</li>
+<li>Colocar las solicitudes y respuestas dentro de un contexto más amplio.</li>
+<li>Los clientes y servidores intercambian información sobre el estado de la aplicación.</li>
+</ul>
+<p>El servidor almacenará la información necesaria para llevar el seguimiento de la sesión.
+- Identificador de la sesión.
+- Identificador del usuario en sesión.
+- Tiempo de expiración de la sesión.
+- Variables asociadas a la sesión.
+El mecanismo más usual para permitir las sesiones es por medio de las cookie, guardando el identificador de la sesión.</p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="2_2_web_dinamica.html" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="2_2_web_dinamica.html" class="btn btn-xs btn-link">
+        2.2 Programación web dinámica
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="index.html" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="index.html" class="btn btn-xs btn-link">
+        1. INTRODUCCIÓN AL CURSO
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content"><p>2022-2023 Jesús Vives - Licencia CC BY-NC-SA</p>
+  <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>

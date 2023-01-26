@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    
+    <link rel="canonical" href="https://vivesjesus.github.io/iaw/7_3_gestion_permisos.html">
+    <link rel="shortcut icon" href="./img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>7.3 Gestión de permisos de usuarios - IMPLANTACIÓN APLICACIONES WEB</title>
+    <link href="./css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="./css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="./css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="./css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="./js/jquery-3.2.1.min.js"></script>
+    <script src="./js/bootstrap-3.3.7.min.js"></script>
+    <script src="./js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '.';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Gesti\u00f3n de permisos de usuarios", url: "#_top", children: [
+              {title: "Control de acceso", url: "#control-de-acceso" },
+              {title: "\u00bfC\u00f3mo determinamos la clase de usuario con el que estamos trabajando?", url: "#como-determinamos-la-clase-de-usuario-con-el-que-estamos-trabajando" },
+              {title: "Control de acceso", url: "#control-de-acceso_1" },
+              {title: "Generando contenido seg\u00fan el tipo de usuario", url: "#generando-contenido-segun-el-tipo-de-usuario" },
+              {title: "C\u00f3digo ejemplo de esta unidad", url: "#codigo-ejemplo-de-esta-unidad" },
+          ]},
+        ];
+
+    </script>
+    <script src="./js/base.js"></script>
+      <script src="search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="7_4_gestion_usu_flask_login.html" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="7_4_gestion_usu_flask_login.html" class="btn btn-xs btn-link">
+        7.4. Gestión de Usuarios con Flask-login
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="7_2_nuevos_usaurios.html" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="7_2_nuevos_usaurios.html" class="btn btn-xs btn-link">
+        7.2 Registrando nuevos usuarios
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="gestion-de-permisos-de-usuarios">Gestión de permisos de usuarios<a class="headerlink" href="#gestion-de-permisos-de-usuarios" title="Permanent link">&para;</a></h1>
+<p>En esta unidad vamos a estudiar como autorizar las distintas acciones que pueden hacer nuestros usuarios en la aplicación. Cuando accedemos a la aplicación podemos hacerlo de tres formas distintas:</p>
+<ul>
+<li>Usuario invitado: Navegamos por la página sin autentificar ningún usuario del sistema.</li>
+<li>Usuario normal: Nos hemos autentificado con un usuario que no es administrador.</li>
+<li>Usuario administrador: Nos hemos autentificado con un usuario administrador.</li>
+</ul>
+<h2 id="control-de-acceso">Control de acceso<a class="headerlink" href="#control-de-acceso" title="Permanent link">&para;</a></h2>
+<p>Veamos una tabla donde indicamos según el tipo de usuario con el que estamos trabajando las distintas acciones que se pueden realizar:</p>
+<table>
+<thead>
+<tr>
+<th align="left">Acción</th>
+<th align="center">Invitado</th>
+<th align="center">Normal</th>
+<th align="center">Administrador</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">Hacer login</td>
+<td align="center">Si</td>
+<td align="center">No</td>
+<td align="center">No</td>
+</tr>
+<tr>
+<td align="left">Registrarse</td>
+<td align="center">Si</td>
+<td align="center">No</td>
+<td align="center">No</td>
+</tr>
+<tr>
+<td align="left">Ver perfil</td>
+<td align="center">No</td>
+<td align="center">Si</td>
+<td align="center">Si</td>
+</tr>
+<tr>
+<td align="left">Puede cambiar la contraseña</td>
+<td align="center">No</td>
+<td align="center">Si</td>
+<td align="center">Si</td>
+</tr>
+<tr>
+<td align="left">Puede ver los videojuegos</td>
+<td align="center">Si</td>
+<td align="center">Si</td>
+<td align="center">Si</td>
+</tr>
+<tr>
+<td align="left">Puede ver las categorías</td>
+<td align="center">Si</td>
+<td align="center">Si</td>
+<td align="center">Si</td>
+</tr>
+<tr>
+<td align="left">Puede añadir categorías y videojuegos</td>
+<td align="center">No</td>
+<td align="center">No</td>
+<td align="center">Si</td>
+</tr>
+<tr>
+<td align="left">Puede modificar y borrar categorías y videojuegos</td>
+<td align="center">No</td>
+<td align="center">No</td>
+<td align="center">Si</td>
+</tr>
+<tr>
+<td align="left">Puede comprar videojuegos</td>
+<td align="center">No</td>
+<td align="center">Si</td>
+<td align="center">Si</td>
+</tr>
+</tbody>
+</table>
+<h2 id="como-determinamos-la-clase-de-usuario-con-el-que-estamos-trabajando">¿Cómo determinamos la clase de usuario con el que estamos trabajando?<a class="headerlink" href="#como-determinamos-la-clase-de-usuario-con-el-que-estamos-trabajando" title="Permanent link">&para;</a></h2>
+<p>En la unidad anterior, preguntábamos por la existencia de las variables de sesión:</p>
+<ul>
+<li>
+<p>Que estás logueado (usuario normal):</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>if session[&quot;id&quot;]
+</code></pre></div>
+</li>
+<li>
+<p>Qué estás logueado y es administrador:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>if session[&quot;admin&quot;]
+</code></pre></div>
+</li>
+</ul>
+<p>En esta unidad vamos a crear dos funciones en el fichero <code>login.py</code> para realizar esta tarea de forma más elegante:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>def is_login():
+<span class="linenos" data-linenos="2 "></span>    if &quot;id&quot; in session:
+<span class="linenos" data-linenos="3 "></span>        return True
+<span class="linenos" data-linenos="4 "></span>    else:
+<span class="linenos" data-linenos="5 "></span>        return False
+<span class="linenos" data-linenos="6 "></span>
+<span class="linenos" data-linenos="7 "></span>def is_admin():
+<span class="linenos" data-linenos="8 "></span>    return session.get(&quot;admin&quot;,False)
+</code></pre></div>
+<p>Por otro lado, en unidades anteriores no teníamos ningún problema al preguntar por la variable <code>session</code> en las plantillas, si queremos hacerlo un poco más elegante podríamos crear dos variables en el contexto de las plantillas que me permitan determinar el rol del usuario, para ello en el mismo fichero <code>login.py</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>@app.context_processor
+<span class="linenos" data-linenos=" 2 "></span>def login():
+<span class="linenos" data-linenos=" 3 "></span>    if &quot;id&quot; in session:
+<span class="linenos" data-linenos=" 4 "></span>        return {&#39;is_login&#39;:True}
+<span class="linenos" data-linenos=" 5 "></span>    else:
+<span class="linenos" data-linenos=" 6 "></span>        return {&#39;is_login&#39;:False}
+<span class="linenos" data-linenos=" 7 "></span>
+<span class="linenos" data-linenos=" 8 "></span>@app.context_processor
+<span class="linenos" data-linenos=" 9 "></span>def admin():
+<span class="linenos" data-linenos="10 "></span>    return {&#39;is_admin&#39;:session.get(&quot;admin&quot;,False) }
+</code></pre></div>
+<p>Donde creamos dos variables: <code>is_login</code> y <code>is_admin</code> que podemos utilizar en las plantillas.</p>
+<h2 id="control-de-acceso_1">Control de acceso<a class="headerlink" href="#control-de-acceso_1" title="Permanent link">&para;</a></h2>
+<p>Por ejemplo la ruta <code>/articulos/new</code> que nos permite añadir un videojuego sólo se debería permitir a los usuarios administradores, por lo que al principio realizamos la comprobación:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>if not is_admin():
+<span class="linenos" data-linenos="2 "></span>    abort(404)
+</code></pre></div>
+<p>Otro ejemplo, sólo podemos registrarnos si no estamos con un usuario logueado, por lo tanto en la ruta <code>registro</code> preguntamos:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>if is_login():
+<span class="linenos" data-linenos="2 "></span>    return redirect(url_for(&quot;inicio&quot;))
+</code></pre></div>
+<h2 id="generando-contenido-segun-el-tipo-de-usuario">Generando contenido según el tipo de usuario<a class="headerlink" href="#generando-contenido-segun-el-tipo-de-usuario" title="Permanent link">&para;</a></h2>
+<p>Además del control de acceso anterior tenemos que hacer que las plantillas generen contenido distintos según le tipo de usuario que tengamos en el sistema.</p>
+<p>Por ejemplo, sólo le debemos mostrar el enlace de añadir videojuegos a los usuarios administradores, para ello en la plantilla <code>inicio.html</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>{% if is_admin %}
+<span class="linenos" data-linenos="2 "></span>    &lt;a class=&quot;btn btn-primary&quot; href=&quot;{{url_for(&#39;articulos_new&#39;)}}&quot; role=&quot;button&quot;&gt;Nuevo videojuego&lt;/a&gt;
+<span class="linenos" data-linenos="3 "></span>{% endif %}
+</code></pre></div>
+<p>Otro ejemplo, mostramos la opción de "Registro" y "Login" para los usuarios invitados, y la opción de "Perfil" y de "Salir" para los usuarios logueados, para ello en la plantilla <code>base.html</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>{% if is_login %}
+<span class="linenos" data-linenos="2 "></span>    &lt;a class=&quot;navbar-brand &quot; href=&quot;/perfil/{{ session[&quot;username&quot;]}}&quot;&gt; Perfil&lt;/a&gt;
+<span class="linenos" data-linenos="3 "></span>    &lt;a class=&quot;navbar-brand &quot; href=&quot;/logout&quot;&gt; {{ session[&quot;username&quot;]}} (Salir)&lt;/a&gt;
+<span class="linenos" data-linenos="4 "></span>{% else %}
+<span class="linenos" data-linenos="5 "></span>    &lt;a class=&quot;navbar-brand &quot; href=&quot;/login&quot;&gt;Login&lt;/a&gt;
+<span class="linenos" data-linenos="6 "></span>    &lt;a class=&quot;navbar-brand &quot; href=&quot;/registro&quot;&gt;Registro&lt;/a&gt;
+<span class="linenos" data-linenos="7 "></span>{% endif %}
+</code></pre></div>
+<p>Para terminar con otro ejemplo, solo los administradores pueden modificar y borrar videojuegos, y los usuarios logueados pueden comprar, en la plantilla <code>inicio.html</code> tenemos el siguiente código:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>{% if is_admin %}
+<span class="linenos" data-linenos="2 "></span>    &lt;td&gt;&lt;a href=&quot;{{url_for(&#39;articulos_edit&#39;,id=art.id)}}&quot;&gt;&lt;span class=&quot;glyphicon glyphicon-pencil&quot;&gt;&lt;/span&gt; Modificar&lt;/a&gt;&lt;/td&gt;
+<span class="linenos" data-linenos="3 "></span>    &lt;td&gt;&lt;a href=&quot;{{url_for(&#39;articulos_delete&#39;,id=art.id)}}&quot;&gt;&lt;span class=&quot;glyphicon glyphicon-trash&quot;&gt;&lt;/span&gt; Borrar&lt;/a&gt;&lt;/td&gt;
+<span class="linenos" data-linenos="4 "></span>{% endif %}
+<span class="linenos" data-linenos="5 "></span>
+<span class="linenos" data-linenos="6 "></span>{% if is_login %}
+<span class="linenos" data-linenos="7 "></span>    &lt;td&gt;&lt;a href=&quot;#&quot;&gt;&lt;span class=&quot;glyphicon glyphicon-shopping-cart&quot;&gt;&lt;/span&gt; Comprar&lt;/a&gt;&lt;/td&gt;
+<span class="linenos" data-linenos="8 "></span>{% endif %}
+</code></pre></div>
+<h2 id="codigo-ejemplo-de-esta-unidad">Código ejemplo de esta unidad<a class="headerlink" href="#codigo-ejemplo-de-esta-unidad" title="Permanent link">&para;</a></h2>
+<p><a href="../../ejemplos/u29">Código</a></p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="7_4_gestion_usu_flask_login.html" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="7_4_gestion_usu_flask_login.html" class="btn btn-xs btn-link">
+        7.4. Gestión de Usuarios con Flask-login
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="7_2_nuevos_usaurios.html" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="7_2_nuevos_usaurios.html" class="btn btn-xs btn-link">
+        7.2 Registrando nuevos usuarios
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content"><p>2022-2023 Jesús Vives - Licencia CC BY-NC-SA</p>
+  <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>

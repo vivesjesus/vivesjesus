@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    
+    <link rel="canonical" href="https://vivesjesus.github.io/iaw/4_5_contenido_estatico.html">
+    <link rel="shortcut icon" href="./img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>4.5. Contenido Estático - IMPLANTACIÓN APLICACIONES WEB</title>
+    <link href="./css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="./css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="./css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="./css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="./js/jquery-3.2.1.min.js"></script>
+    <script src="./js/bootstrap-3.3.7.min.js"></script>
+    <script src="./js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '.';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Contenido est\u00e1tico", url: "#_top", children: [
+              {title: "Acceder al contenido est\u00e1tico", url: "#acceder-al-contenido-estatico" },
+              {title: "Mostrar una imagen", url: "#mostrar-una-imagen" },
+          ]},
+        ];
+
+    </script>
+    <script src="./js/base.js"></script>
+      <script src="search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="4_6_ejercicios.html" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="4_6_ejercicios.html" class="btn btn-xs btn-link">
+        4.6. Ejercicios
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="4_4_gen_http.html" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="4_4_gen_http.html" class="btn btn-xs btn-link">
+        4.4 Generando respuestas HTTP, respuestas de error y redirecciones
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="contenido-estatico"><strong> Contenido estático</strong><a class="headerlink" href="#contenido-estatico" title="Permanent link">&para;</a></h1>
+<p>Nuestra página web necesita tener contenido estático: hoja de estilo, ficheros java script, imágenes, documentos pdf, etc. Para acceder a eelos vamos a utilizar la función url_for.</p>
+<p>¿Dónde guardamos el contenido estático?Permalink
+Dentro de nuestro directorio aplicacion vamos a crear un directorio llamado static, donde podemos crear la estructura de directorios adecuada para guardas nuestro contenido estático. Por ejemplo para guardar el CSS, el java script y las imágenes podríamos crear una estrucutra como la siguiente:
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>aplicacion
+<span class="linenos" data-linenos="2 "></span>    static
+<span class="linenos" data-linenos="3 "></span>        css
+<span class="linenos" data-linenos="4 "></span>        js
+<span class="linenos" data-linenos="5 "></span>        img
+</code></pre></div></p>
+<h2 id="acceder-al-contenido-estatico"><strong> Acceder al contenido estático </strong><a class="headerlink" href="#acceder-al-contenido-estatico" title="Permanent link">&para;</a></h2>
+<hr />
+<p>Por ejemplo:
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>url_for(&#39;static&#39;, filename=&#39;css/style.css&#39;)
+</code></pre></div>
+Estariamos creando la ruta para acceder al fichero style.css 
+que se encuentra en static/css.</p>
+<p>Otro ejemplo:
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>url_for(&#39;static&#39;, filename=&#39;img/tux.png&#39;)
+</code></pre></div>
+Estaríamos creando la ruta para acceder al fichero tux.png que se encuentra en static/img.</p>
+<h2 id="mostrar-una-imagen"><strong>Mostrar una imagen</strong><a class="headerlink" href="#mostrar-una-imagen" title="Permanent link">&para;</a></h2>
+<p><div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>@app.route(&#39;/&#39;)
+<span class="linenos" data-linenos="2 "></span>def inicio():
+<span class="linenos" data-linenos="3 "></span>    return &#39;&lt;img src=&quot;&#39;+url_for(&#39;static&#39;, filename=&#39;img/tux.png&#39;)+&#39;&quot;/&gt;&#39;
+</code></pre></div>
+Y comprobamos que se muestra al acceder a la página:</p>
+<p><img alt="imagen" src="imagenes/tux.png" /></p>
+<p>Código ejemplo de esta unidad
+<a href="zip/codigo_4_5.zip">Código</a></p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="4_6_ejercicios.html" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="4_6_ejercicios.html" class="btn btn-xs btn-link">
+        4.6. Ejercicios
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="4_4_gen_http.html" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="4_4_gen_http.html" class="btn btn-xs btn-link">
+        4.4 Generando respuestas HTTP, respuestas de error y redirecciones
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content"><p>2022-2023 Jesús Vives - Licencia CC BY-NC-SA</p>
+  <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>

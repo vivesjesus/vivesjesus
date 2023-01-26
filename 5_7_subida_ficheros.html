@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    
+    <link rel="canonical" href="https://vivesjesus.github.io/iaw/5_7_subida_ficheros.html">
+    <link rel="shortcut icon" href="./img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>5.7. Subida de Ficheros - IMPLANTACIÓN APLICACIONES WEB</title>
+    <link href="./css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="./css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="./css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="./css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="./js/jquery-3.2.1.min.js"></script>
+    <script src="./js/bootstrap-3.3.7.min.js"></script>
+    <script src="./js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '.';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Subida de ficheros", url: "#_top", children: [
+              {title: "Creando un formulario para subir ficheros", url: "#creando-un-formulario-para-subir-ficheros" },
+              {title: "Generando el formulario", url: "#generando-el-formulario" },
+              {title: "Tratamiento del fichero subido", url: "#tratamiento-del-fichero-subido" },
+              {title: "Vista inicio.html", url: "#vista-iniciohtml" },
+              {title: "C\u00f3digo ejemplo de esta unidad", url: "#codigo-ejemplo-de-esta-unidad" },
+          ]},
+        ];
+
+    </script>
+    <script src="./js/base.js"></script>
+      <script src="search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="6_1_flask_sqlalchemy.html" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="6_1_flask_sqlalchemy.html" class="btn btn-xs btn-link">
+        6.1 Usando base de datos en Flask, flask-sqlalchemy
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="5_6_formularios_flask_wtf.html" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="5_6_formularios_flask_wtf.html" class="btn btn-xs btn-link">
+        5.6 Generando formularios con flask-wtf
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="subida-de-ficheros"><strong>Subida de ficheros</strong><a class="headerlink" href="#subida-de-ficheros" title="Permanent link">&para;</a></h1>
+<p>Es posible realizar subidas de ficheros al servidor, Flask nos ofrece está posibilidad, pero vamos a utilizar la extensión Flask-WTF para facilitar esta labor. Hay que recordad que cuando se manda un fichero al servidor la información del fichero la encontramos en request.file.</p>
+<p>En esta unidad vamos a hacer una aplicación web que nos permita generar una galería de imágenes. En nuestra galería vamos a poder subir imágenes a través de un formulario.</p>
+<h2 id="creando-un-formulario-para-subir-ficheros"><strong>Creando un formulario para subir ficheros</strong><a class="headerlink" href="#creando-un-formulario-para-subir-ficheros" title="Permanent link">&para;</a></h2>
+<hr />
+<p>Vamos a utilizar el tipo de campo FileField para crear nuestro formulario para subir un fichero.</p>
+<h5 id="formspy"><strong>forms.py</strong><a class="headerlink" href="#formspy" title="Permanent link">&para;</a></h5>
+<p><div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>from flask_wtf import FlaskForm
+<span class="linenos" data-linenos="2 "></span>from wtforms import SubmitField
+<span class="linenos" data-linenos="3 "></span>from flask_wtf.file import FileField, FileRequired
+<span class="linenos" data-linenos="4 "></span>
+<span class="linenos" data-linenos="5 "></span>
+<span class="linenos" data-linenos="6 "></span>class UploadForm(FlaskForm):
+<span class="linenos" data-linenos="7 "></span>    photo = FileField(&#39;selecciona imagen:&#39;, validators=[FileRequired()])
+<span class="linenos" data-linenos="8 "></span>    submit = SubmitField(&#39;Submit&#39;)
+</code></pre></div>
+Además hemos introducido una validación, indicando que es necesario indicar un fichero.</p>
+<h2 id="generando-el-formulario"><strong>Generando el formulario</strong><a class="headerlink" href="#generando-el-formulario" title="Permanent link">&para;</a></h2>
+<hr />
+<p>De forma similar a lo que vimos en la unidad anterior vamos a generar el formulario en nuestra plantilla:</p>
+<h5 id="templateuploadhtml"><strong>template/upload.html</strong><a class="headerlink" href="#templateuploadhtml" title="Permanent link">&para;</a></h5>
+<p><div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>{% extends &quot;base.html&quot; %}
+<span class="linenos" data-linenos=" 2 "></span>{% block title %}Prueba{% endblock %}
+<span class="linenos" data-linenos=" 3 "></span>{% block contenido %}
+<span class="linenos" data-linenos=" 4 "></span>        &lt;h2&gt;Subir imágnes&lt;/h2&gt;
+<span class="linenos" data-linenos=" 5 "></span>        {% for field, errors in form.errors.items() %}
+<span class="linenos" data-linenos=" 6 "></span>            &lt;div class=&quot;alert alert-danger&quot;&gt;
+<span class="linenos" data-linenos=" 7 "></span>            {{ form[field].label }}: {{ &#39;, &#39;.join(errors) }}
+<span class="linenos" data-linenos=" 8 "></span>            &lt;/div&gt;
+<span class="linenos" data-linenos=" 9 "></span>        {% endfor %}
+<span class="linenos" data-linenos="10 "></span>        &lt;form action=&quot;{{url_for(&#39;upload&#39;)}}&quot; method=&quot;POST&quot; enctype=&quot;multipart/form-data&quot;&gt;
+<span class="linenos" data-linenos="11 "></span>            {{ form.csrf_token }}
+<span class="linenos" data-linenos="12 "></span>            {{form.photo.label() }}{{form.photo()}}&lt;br/&gt;
+<span class="linenos" data-linenos="13 "></span>            &lt;br/&gt;
+<span class="linenos" data-linenos="14 "></span>            {{form.submit()}}
+<span class="linenos" data-linenos="15 "></span>        &lt;/form&gt;
+<span class="linenos" data-linenos="16 "></span>{% endblock %}
+</code></pre></div>
+Al subir un fichero es necesario poner el atributo enctype="multipart/form-data" al definir el formulario.</p>
+<h2 id="tratamiento-del-fichero-subido"><strong>Tratamiento del fichero subido</strong><a class="headerlink" href="#tratamiento-del-fichero-subido" title="Permanent link">&para;</a></h2>
+<hr />
+<p>Al crear la vista vamos a crear un formulario:
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>form = UploadForm()
+</code></pre></div>
+Al construir el objeto formulario no hemos indicado con que valores vamos a rellenar el formulario (en la unidad anterior lo indicábamos de esta manera: form = UploadForm(request.form)). Cuando creamos un objeto de esta manera, automáticamente carga el formulario con los datos (request.form) y con los posibles ficheros que hayamos subido (request.file), por lo que tenemos a nuestra disposición los datos y los ficheros recibidos.</p>
+<p>Si el formulario es válido:</p>
+<ul>
+<li>Creamos un objeto fichero a parir del formulario
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>      f = form.photo.data
+</code></pre></div></li>
+<li>Creamos un nombre de fichero que sea compatible con el sistema de archivo (lo hacemos con la función secure_filename)
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>      filename = secure_filename(f.filename)
+</code></pre></div></li>
+<li>Y lo guardamos en el directorio adecuado.
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>      f.save(app.root_path+&quot;/static/img/&quot;+filename)
+</code></pre></div></li>
+<li>Finalmente realizamos una redirección al inicio de la página.
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>      return redirect(url_for(&#39;inicio&#39;))
+</code></pre></div>
+La vista completa quedaría de la siguiente manera:</li>
+</ul>
+<h5 id="apppy"><strong>app.py</strong><a class="headerlink" href="#apppy" title="Permanent link">&para;</a></h5>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>from flask import Flask, render_template, request, redirect, url_for
+<span class="linenos" data-linenos=" 2 "></span>from flask_bootstrap import Bootstrap
+<span class="linenos" data-linenos=" 3 "></span>from os import listdir
+<span class="linenos" data-linenos=" 4 "></span>from aplicacion.forms import UploadForm
+<span class="linenos" data-linenos=" 5 "></span>from werkzeug.utils import secure_filename
+<span class="linenos" data-linenos=" 6 "></span>
+<span class="linenos" data-linenos=" 7 "></span>app = Flask(__name__)
+<span class="linenos" data-linenos=" 8 "></span>app.secret_key = &#39;A0Zr98j/3yX R~XHH!jmN]LWX/,?RT&#39;
+<span class="linenos" data-linenos=" 9 "></span>Bootstrap(app)
+<span class="linenos" data-linenos="10 "></span># Con esto listamos las imágenes
+<span class="linenos" data-linenos="11 "></span>@app.route(&#39;/&#39;)
+<span class="linenos" data-linenos="12 "></span>def inicio():
+<span class="linenos" data-linenos="13 "></span>    lista = []
+<span class="linenos" data-linenos="14 "></span>    for file in listdir(app.root_path+&quot;/static/img&quot;):
+<span class="linenos" data-linenos="15 "></span>        lista.append(file)
+<span class="linenos" data-linenos="16 "></span>    return render_template(&quot;inicio.html&quot;, lista=lista)
+<span class="linenos" data-linenos="17 "></span>
+<span class="linenos" data-linenos="18 "></span>
+<span class="linenos" data-linenos="19 "></span>@app.route(&#39;/upload&#39;, methods=[&#39;get&#39;, &#39;post&#39;])
+<span class="linenos" data-linenos="20 "></span>def upload():
+<span class="linenos" data-linenos="21 "></span>    form = UploadForm()  # carga request.from y request.file
+<span class="linenos" data-linenos="22 "></span>    if form.validate_on_submit():
+<span class="linenos" data-linenos="23 "></span>        f = form.photo.data
+<span class="linenos" data-linenos="24 "></span>        filename = secure_filename(f.filename)
+<span class="linenos" data-linenos="25 "></span>        f.save(app.root_path + &quot;/static/img/&quot; + filename)
+<span class="linenos" data-linenos="26 "></span>        return redirect(url_for(&#39;inicio&#39;))
+<span class="linenos" data-linenos="27 "></span>    return render_template(&#39;upload.html&#39;, form=form)
+<span class="linenos" data-linenos="28 "></span>
+<span class="linenos" data-linenos="29 "></span>
+<span class="linenos" data-linenos="30 "></span>@app.errorhandler(404)
+<span class="linenos" data-linenos="31 "></span>def page_not_found(error):
+<span class="linenos" data-linenos="32 "></span>    return render_template(&quot;error.html&quot;, error=&quot;Página no encontrada...&quot;), 404
+</code></pre></div>
+<h2 id="vista-iniciohtml"><strong>Vista inicio.html</strong><a class="headerlink" href="#vista-iniciohtml" title="Permanent link">&para;</a></h2>
+<hr />
+<p>Si nos damos cuenta, no tenemos creada la vista inicial, esta en realidad es bastante simple, recorremos la lista que nos pasa y vamos mostrando cada una de las imágenes.</p>
+<h5 id="templateiniciohtml"><strong>template/inicio.html</strong><a class="headerlink" href="#templateiniciohtml" title="Permanent link">&para;</a></h5>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>{% extends &quot;base.html&quot; %}
+<span class="linenos" data-linenos=" 2 "></span>{% block title %}Prueba{% endblock %}
+<span class="linenos" data-linenos=" 3 "></span>{% block contenido %}
+<span class="linenos" data-linenos=" 4 "></span>        &lt;h2&gt;Geleria de imágenes&lt;/h2&gt;
+<span class="linenos" data-linenos=" 5 "></span>
+<span class="linenos" data-linenos=" 6 "></span>            {% for lis in lista %}
+<span class="linenos" data-linenos=" 7 "></span>
+<span class="linenos" data-linenos=" 8 "></span>            &lt;img src=&quot;{{url_for(&#39;static&#39;,filename=&#39;img/&#39;)}}{{lis}}&quot;/&gt;
+<span class="linenos" data-linenos=" 9 "></span>            {% endfor %}
+<span class="linenos" data-linenos="10 "></span>            &lt;br/&gt;
+<span class="linenos" data-linenos="11 "></span>            &lt;a href=&quot;{{url_for(&#39;upload&#39;)}}&quot;&gt;Subir imagen&lt;/a&gt;
+<span class="linenos" data-linenos="12 "></span>            &lt;br/&gt;
+<span class="linenos" data-linenos="13 "></span>
+<span class="linenos" data-linenos="14 "></span>{% endblock %}
+</code></pre></div>
+<h2 id="codigo-ejemplo-de-esta-unidad"><strong>Código ejemplo de esta unidad</strong><a class="headerlink" href="#codigo-ejemplo-de-esta-unidad" title="Permanent link">&para;</a></h2>
+<p><a href="zip/codigo_5_7.zip">Código</a></p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="6_1_flask_sqlalchemy.html" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="6_1_flask_sqlalchemy.html" class="btn btn-xs btn-link">
+        6.1 Usando base de datos en Flask, flask-sqlalchemy
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="5_6_formularios_flask_wtf.html" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="5_6_formularios_flask_wtf.html" class="btn btn-xs btn-link">
+        5.6 Generando formularios con flask-wtf
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content"><p>2022-2023 Jesús Vives - Licencia CC BY-NC-SA</p>
+  <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>

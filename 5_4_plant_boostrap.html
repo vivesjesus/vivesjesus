@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    
+    <link rel="canonical" href="https://vivesjesus.github.io/iaw/5_4_plant_boostrap.html">
+    <link rel="shortcut icon" href="./img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>5.4 Plantillas con bootstrap (flask-bootstrap) - IMPLANTACIÓN APLICACIONES WEB</title>
+    <link href="./css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="./css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="./css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="./css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="./js/jquery-3.2.1.min.js"></script>
+    <script src="./js/bootstrap-3.3.7.min.js"></script>
+    <script src="./js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '.';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Plantillas con bootstrap (flask-bootstrap)", url: "#_top", children: [
+              {title: "Instalaci\u00f3n de Flask-Bootstrap", url: "#instalacion-de-flask-bootstrap" },
+              {title: "Configuraci\u00f3n de nuestra aplicaci\u00f3n", url: "#configuracion-de-nuestra-aplicacion" },
+              {title: "Uso de la plantilla base bootstrap", url: "#uso-de-la-plantilla-base-bootstrap" },
+              {title: "Ejemplos", url: "#ejemplos" },
+          ]},
+        ];
+
+    </script>
+    <script src="./js/base.js"></script>
+      <script src="search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="5_5_formularios.html" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="5_5_formularios.html" class="btn btn-xs btn-link">
+        5.5 Trabajando con formularios
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="5_3_herencia_plan.html" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="5_3_herencia_plan.html" class="btn btn-xs btn-link">
+        5.3 Herencia de plantillas
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="plantillas-con-bootstrap-flask-bootstrap"><strong>Plantillas con bootstrap (flask-bootstrap)</strong><a class="headerlink" href="#plantillas-con-bootstrap-flask-bootstrap" title="Permanent link">&para;</a></h1>
+<p>Podemos utilizar la hoja de estilo que queramos, la podemos guardar en nuestro contenido estático o acceder por medio de una url.</p>
+<p>Sin embargo si queremos trabajar con plantillas que utilicen como hoja de estilos y javascript el framework bootstrap podemos utilizar la extensión Flask-Bootstrap.</p>
+<h2 id="instalacion-de-flask-bootstrap"><strong>Instalación de Flask-Bootstrap</strong><a class="headerlink" href="#instalacion-de-flask-bootstrap" title="Permanent link">&para;</a></h2>
+<hr />
+<p>Con nuestro entorno virtual activado:
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>pip install Flask-Bootstrap
+</code></pre></div></p>
+<h2 id="configuracion-de-nuestra-aplicacion"><strong>Configuración de nuestra aplicación</strong><a class="headerlink" href="#configuracion-de-nuestra-aplicacion" title="Permanent link">&para;</a></h2>
+<hr />
+<p>En nuestra aplicación escribimos lo siguiente:
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>from flask import Flask, render_template, abort
+<span class="linenos" data-linenos="2 "></span>from flask_bootstrap import Bootstrap
+<span class="linenos" data-linenos="3 "></span>app = Flask(__name__)
+<span class="linenos" data-linenos="4 "></span>Bootstrap(app)
+<span class="linenos" data-linenos="5 "></span>...
+</code></pre></div>
+Está líneas generan una plantilla base de la que podemos extender las nuestras.</p>
+<h2 id="uso-de-la-plantilla-base-bootstrap"><strong>Uso de la plantilla base bootstrap</strong><a class="headerlink" href="#uso-de-la-plantilla-base-bootstrap" title="Permanent link">&para;</a></h2>
+<hr />
+<p>Por ejemplo nuestra primera plantilla quedaría:
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>{% extends &quot;bootstrap/base.html&quot; %}
+<span class="linenos" data-linenos=" 2 "></span>{% block title %}Hola, que tal {{nombre}}{% endblock %}
+<span class="linenos" data-linenos=" 3 "></span>{% block content %}
+<span class="linenos" data-linenos=" 4 "></span>    &lt;h2&gt;Vamos a saludar&lt;/h2&gt;
+<span class="linenos" data-linenos=" 5 "></span>    {% if nombre %}
+<span class="linenos" data-linenos=" 6 "></span>      &lt;h1&gt;Hola {{nombre|title}}&lt;/h1&gt;
+<span class="linenos" data-linenos=" 7 "></span>      &lt;p&gt;¿Cómo estás?&lt;/p&gt;
+<span class="linenos" data-linenos=" 8 "></span>    {%else%}
+<span class="linenos" data-linenos=" 9 "></span>      &lt;p&gt;No has indicado un nombre&lt;/p&gt;
+<span class="linenos" data-linenos="10 "></span>    {% endif %}
+<span class="linenos" data-linenos="11 "></span>{% endblock %}
+</code></pre></div>
+La plantilla base de bootstrap ofrece los siguientes bloques que podemos sobreescribir:</p>
+<ul>
+<li>html: Contiene el contenido completo de la etiqueta <code>&lt;html&gt;</code>.</li>
+<li>html_attribs: Atribulos para la etiqueta <code>&lt;html&gt;</code>.</li>
+<li>head: Contiene el contenido completo de la etiqueta <code>&lt;head&gt;</code>.</li>
+<li>body: Contiene el contenido completo de la etiqueta <code>&lt;body&gt;</code>.</li>
+<li>body_attribs: Atribulos para la etiqueta <code>&lt;body&gt;</code>.</li>
+<li>title: Contiene el contenido completo de la etiqueta <code>&lt;title&gt;</code>.</li>
+<li>styles: Contiene todos los estilos CSS de la etiqueta <code>&lt;link&gt;</code>.</li>
+<li>metas: Contiene los <code>&lt;meta&gt;</code> de la cabacera.</li>
+<li>navbar: Un bloque vacío encima del contenido.</li>
+<li>content: Bloque para poner nuestro contenido.</li>
+<li>scripts: Contiene todos los scripts en la etiqueta <code>&lt;script&gt;</code> al final del body.</li>
+</ul>
+<h2 id="ejemplos"><strong>Ejemplos</strong><a class="headerlink" href="#ejemplos" title="Permanent link">&para;</a></h2>
+<hr />
+<p>Añadiendo otro fichero de hoja de estilo:
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>{% block styles %}
+<span class="linenos" data-linenos="2 "></span>{{super()}}
+<span class="linenos" data-linenos="3 "></span>&lt;link rel=&quot;stylesheet&quot; href=&quot;{{url_for(&#39;.static&#39;, filename=&#39;mystyle.css&#39;)}}&quot;&gt;
+<span class="linenos" data-linenos="4 "></span>{% endblock %}
+</code></pre></div></p>
+<p>Añadiendo otro fichero Javascript:
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>{% block scripts %}
+<span class="linenos" data-linenos="2 "></span>&lt;script src=&quot;{{url_for(&#39;.static&#39;, filename=&#39;myscripts.js&#39;)}}&quot;&gt;&lt;/script&gt;
+<span class="linenos" data-linenos="3 "></span>{{super()}}
+<span class="linenos" data-linenos="4 "></span>{% endblock %}
+</code></pre></div></p>
+<p>Añadiendo el idioma español en los atributos de <code>&lt;html&gt;</code>:
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>{% block html_attribs %} lang=&quot;es&quot;{% endblock %}
+</code></pre></div>
+Código ejemplo de esta unidad
+<a href="zip/codigo_5_4.zip">Código</a></p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="5_5_formularios.html" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="5_5_formularios.html" class="btn btn-xs btn-link">
+        5.5 Trabajando con formularios
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="5_3_herencia_plan.html" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="5_3_herencia_plan.html" class="btn btn-xs btn-link">
+        5.3 Herencia de plantillas
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content"><p>2022-2023 Jesús Vives - Licencia CC BY-NC-SA</p>
+  <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>

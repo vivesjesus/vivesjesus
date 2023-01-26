@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    
+    <link rel="canonical" href="https://vivesjesus.github.io/iaw/5_6_formularios_flask_wtf.html">
+    <link rel="shortcut icon" href="./img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>5.6 Generando formularios con flask-wtf - IMPLANTACIÓN APLICACIONES WEB</title>
+    <link href="./css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="./css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="./css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="./css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="./js/jquery-3.2.1.min.js"></script>
+    <script src="./js/bootstrap-3.3.7.min.js"></script>
+    <script src="./js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '.';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Generando formularios con flask-wtf", url: "#_top", children: [
+              {title: "Instalaci\u00f3n de Flask-WTF", url: "#instalacion-de-flask-wtf" },
+              {title: "Creando formularios", url: "#creando-formularios" },
+              {title: "Trabajando con formularios", url: "#trabajando-con-formularios" },
+              {title: "Seguridad en los formularios", url: "#seguridad-en-los-formularios" },
+              {title: "Generaci\u00f3n de formularios", url: "#generacion-de-formularios" },
+              {title: "Enviando y gestionando la informaci\u00f3n del formulario", url: "#enviando-y-gestionando-la-informacion-del-formulario" },
+              {title: "C\u00f3digo ejemplo de esta unidad", url: "#codigo-ejemplo-de-esta-unidad" },
+          ]},
+        ];
+
+    </script>
+    <script src="./js/base.js"></script>
+      <script src="search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="5_7_subida_ficheros.html" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="5_7_subida_ficheros.html" class="btn btn-xs btn-link">
+        5.7. Subida de Ficheros
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="5_5_formularios.html" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="5_5_formularios.html" class="btn btn-xs btn-link">
+        5.5 Trabajando con formularios
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="generando-formularios-con-flask-wtf"><strong>Generando formularios con flask-wtf</strong><a class="headerlink" href="#generando-formularios-con-flask-wtf" title="Permanent link">&para;</a></h1>
+<p><a href="https://flask-wtf.readthedocs.io/en/1.0.x/">Flask-WTF</a> es una extensión de Flask que nos permite trabajar con la librería <a href="https://wtforms.readthedocs.io/en/3.0.x/">WTForm</a> de python, que nos facilita la generación y validación de formularios HTML.</p>
+<h2 id="instalacion-de-flask-wtf"><strong>Instalación de Flask-WTF</strong><a class="headerlink" href="#instalacion-de-flask-wtf" title="Permanent link">&para;</a></h2>
+<hr />
+<p>Con nuestro entorno virtual ejecutamos:
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>pip install Flask-WTF
+</code></pre></div>
+Por dependencia se instala la librería WTForm.</p>
+<h2 id="creando-formularios"><strong>Creando formularios</strong><a class="headerlink" href="#creando-formularios" title="Permanent link">&para;</a></h2>
+<hr />
+<p>En el directorio de nuestra aplicación (aplicacion) vamos a crear un fichero (forms.py) donde vamos a guardar los distintos formularios de nuestra aplicación. Por ejemplo el fichero forms.py:</p>
+<h5 id="formspy"><strong>forms.py</strong><a class="headerlink" href="#formspy" title="Permanent link">&para;</a></h5>
+<p><div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>from flask_wtf import FlaskForm
+<span class="linenos" data-linenos=" 2 "></span>from wtforms import Form, IntegerField,SelectField,SubmitField
+<span class="linenos" data-linenos=" 3 "></span>from wtforms.validators import DataRequired 
+<span class="linenos" data-linenos=" 4 "></span>
+<span class="linenos" data-linenos=" 5 "></span>class formcalculadora(FlaskForm):                      
+<span class="linenos" data-linenos=" 6 "></span>    num1=IntegerField(&quot;Número1&quot;,validators=[DataRequired(&quot;Tienes que introducir el dato&quot;)])
+<span class="linenos" data-linenos=" 7 "></span>    num2=IntegerField(&quot;Número2&quot;,validators=[DataRequired(&quot;Tienes que introducir el dato&quot;)])
+<span class="linenos" data-linenos=" 8 "></span>    operador=SelectField(&quot;Operador&quot;,choices=[(&quot;+&quot;,&quot;Sumar&quot;),(&quot;-&quot;,&quot;Resta&quot;),
+<span class="linenos" data-linenos=" 9 "></span>                            (&quot;*&quot;,&quot;Multiplicar&quot;),(&quot;/&quot;,&quot;Dividir&quot;)])
+<span class="linenos" data-linenos="10 "></span>    submit = SubmitField(&#39;Submit&#39;)
+</code></pre></div>
+Como puedes ver hemos creado una clase heredada de la clase FlaskForm donde hemos indicado distintos atributos que son objetos de los distintos tipos de campos que podemos indicar, donde inicializamos distintos datos (label, validaciones,…).</p>
+<h2 id="trabajando-con-formularios"><strong>Trabajando con formularios</strong><a class="headerlink" href="#trabajando-con-formularios" title="Permanent link">&para;</a></h2>
+<hr />
+<p>En nuestra aplicación <strong>app.py</strong> tenemos que importar la clase que hemos creado:
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>from aplicacion.forms import formcalculadora
+</code></pre></div>
+Y a continuación podemos crear un objeto a partir de ella:
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>form = formcalculadora()
+</code></pre></div>
+Al crear el formulario podemos inicialzarlos con datos, normalmente con los parámetros recibidos en la vista (request.form):
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>form = formcalculadora(request.form)    
+</code></pre></div>
+El objeto form nos ofrece algunos atributos y métodos para su gestión:</p>
+<ul>
+<li>form.validate_on_submit(): Nos permite comprobar si el formulario ha sido enviado y es válido.</li>
+<li>form.data: Nos ofrece un diccionario con los datos del formulario.</li>
+<li>form.errors: Si el formulario no es válido nos devuelve un diccionario con los errores.</li>
+<li>form.num1.data: Para cada campo (en este ejemplo num1)`nos devuelve su valor.</li>
+<li>form.num1.errors: Es una tupla con los errores de validación de el campo determinado.</li>
+<li>form.num1(): Nos devuelve el código HTML para generar este campo.</li>
+<li>form.num1.label(): Nos devuelve el código HTML para general la etiqueta del campo.</li>
+</ul>
+<p>Puedes encontrar más atributos y métodos en la documentación de <a href="https://wtforms.readthedocs.io/en/3.0.x/">WTForm</a>.</p>
+<h2 id="seguridad-en-los-formularios"><strong>Seguridad en los formularios</strong><a class="headerlink" href="#seguridad-en-los-formularios" title="Permanent link">&para;</a></h2>
+<hr />
+<p>Por defecto Flask-WTF protege los formularios contra el ataque CSRF (Cross-Site Request Forgery o falsificación de petición en sitios cruzados). Este ataque se produce cuando un sitio web malicioso envía solicitudes a un sitio web en el que está conectada la víctima.</p>
+<p>Para implementar la protección CSRF, Flask-WTF necesita que configuremos una clave de cifrado, para generar tokens encriptados que se utilizarán para verificar la autenticidad de la petición. Para ello, en nuestro programa principal:
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>app.secret_key = &#39;clave de cifrado lo más robusta posible&#39;
+</code></pre></div>
+Cada vez que generemos un formulario se incluirá un campo oculto que contendrá el token cifrado que permitirá verificar que el envió del formulario ha sido lícita. Para generar este campo oculto utilizamos el método form.csrf_token() que mostrará un código HTML parecido a este:
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>&lt;input id=&quot;csrf_token&quot; name=&quot;csrf_token&quot; type=&quot;hidden&quot; value=&quot;IjE5OWRiYmY0MGE2MT...&quot;&gt;
+</code></pre></div></p>
+<h2 id="generacion-de-formularios"><strong>Generación de formularios</strong><a class="headerlink" href="#generacion-de-formularios" title="Permanent link">&para;</a></h2>
+<hr />
+<p>En nuestra plantillas, podemos generar el formulario campo por campo, por ejemplo:
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>&lt;form action={{url_for(&quot;calculadora_post&quot;)}} method=&quot;post&quot;&gt;
+<span class="linenos" data-linenos="2 "></span>    {{ form.csrf_token }}
+<span class="linenos" data-linenos="3 "></span>    {{form.num1.label() }}{{form.num1()}}&lt;br/&gt;
+<span class="linenos" data-linenos="4 "></span>    {{form.num2.label() }}{{form.num2()}}&lt;br/&gt;
+<span class="linenos" data-linenos="5 "></span>    {{form.operador.label() }}{{form.operador()}}&lt;br/&gt;
+<span class="linenos" data-linenos="6 "></span>        &lt;br/&gt;
+<span class="linenos" data-linenos="7 "></span>        {{form.submit()}}
+<span class="linenos" data-linenos="8 "></span>&lt;/form&gt;
+</code></pre></div>
+También tenemos la opción de recorrer el formulario:
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>&lt;form action={{url_for(&quot;calculadora_post&quot;)}} method=&quot;post&quot;&gt;    
+<span class="linenos" data-linenos="2 "></span>    {% for field in form %}
+<span class="linenos" data-linenos="3 "></span>        {{field.label() }}{{field()}}&lt;br/&gt;
+<span class="linenos" data-linenos="4 "></span>    {% endfor %}
+<span class="linenos" data-linenos="5 "></span>&lt;/form&gt;
+</code></pre></div>
+Para mostrar los errores de validación podemos realizar un recorrido similar a este:
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>{% for field, errors in form.errors.items() %}
+<span class="linenos" data-linenos="2 "></span>    &lt;div class=&quot;alert alert-danger&quot;&gt;
+<span class="linenos" data-linenos="3 "></span>        {{ form[field].label }}: {{ &#39;, &#39;.join(errors) }}
+<span class="linenos" data-linenos="4 "></span>    &lt;/div&gt;
+<span class="linenos" data-linenos="5 "></span>{% endfor %}
+</code></pre></div>
+Quedando el template/calculadora_post.html de la siguiente forma:</p>
+<h5 id="calculadora_posthtml"><strong>calculadora_post.html </strong><a class="headerlink" href="#calculadora_posthtml" title="Permanent link">&para;</a></h5>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>{% extends &quot;base.html&quot; %}
+<span class="linenos" data-linenos=" 2 "></span>{% block title %}Calculadora{% endblock %}
+<span class="linenos" data-linenos=" 3 "></span>{% block contenido %}
+<span class="linenos" data-linenos=" 4 "></span>        &lt;h2&gt;Calculadora&lt;/h2&gt;
+<span class="linenos" data-linenos=" 5 "></span>        {% for field, errors in form.errors.items() %}
+<span class="linenos" data-linenos=" 6 "></span>            &lt;div class=&quot;alert alert-danger&quot;&gt;
+<span class="linenos" data-linenos=" 7 "></span>            {{ form[field].label }}: {{ &#39;, &#39;.join(errors) }}
+<span class="linenos" data-linenos=" 8 "></span>            &lt;/div&gt;
+<span class="linenos" data-linenos=" 9 "></span>        {% endfor %}
+<span class="linenos" data-linenos="10 "></span>        &lt;form action={{url_for(&quot;calculadora_post&quot;)}} method=&quot;post&quot;&gt;
+<span class="linenos" data-linenos="11 "></span>        &lt;!--
+<span class="linenos" data-linenos="12 "></span>        {% for field in form %}
+<span class="linenos" data-linenos="13 "></span>            {{field.label() }}{{field()}}&lt;br/&gt;
+<span class="linenos" data-linenos="14 "></span>        {% endfor %}
+<span class="linenos" data-linenos="15 "></span>        --&gt;
+<span class="linenos" data-linenos="16 "></span>        {{ form.csrf_token }}
+<span class="linenos" data-linenos="17 "></span>        {{form.num1.label() }}{{form.num1()}}&lt;br/&gt;
+<span class="linenos" data-linenos="18 "></span>        {{form.num2.label() }}{{form.num2()}}&lt;br/&gt;
+<span class="linenos" data-linenos="19 "></span>        {{form.operador.label() }}{{form.operador()}}&lt;br/&gt;
+<span class="linenos" data-linenos="20 "></span>        &lt;br/&gt;
+<span class="linenos" data-linenos="21 "></span>        {{form.submit()}}
+<span class="linenos" data-linenos="22 "></span>        &lt;/form&gt;
+<span class="linenos" data-linenos="23 "></span>
+<span class="linenos" data-linenos="24 "></span>{% endblock %}
+</code></pre></div>
+<h2 id="enviando-y-gestionando-la-informacion-del-formulario"><strong>Enviando y gestionando la información del formulario</strong><a class="headerlink" href="#enviando-y-gestionando-la-informacion-del-formulario" title="Permanent link">&para;</a></h2>
+<hr />
+<p>Vamos a usar un patrón de diseño basado en la creación de una vista que se comporte de la siguiente manera:</p>
+<ul>
+<li>
+<ol>
+<li>La primera vez que accedemos a la ruta accedemos utilizando el método GET. En nuestro caso se creará un formulario sin datos (ya que request.form no tiene ningún dato) , el formulario no se ha enviado y por lo tanto se devuelve la plantilla con el formulario vacío.</li>
+</ol>
+</li>
+<li>
+<ol start="2">
+<li>Se rellena el formulario y se manda la información a la misma ruta pero utilizando el método POST. En este caso se crea un formulario que se rellena con la información que se ha recibido del formulario.</li>
+</ol>
+</li>
+<li>
+<ol start="3">
+<li>Si el formulario es válido se gestiona la información y se realiza la acción que se tenga que hacer (guardar en una base de datos, mostrar una plantilla resultado,…)</li>
+</ol>
+</li>
+<li>
+<ol start="4">
+<li>Si el formulario no es válido se vuelve a generar la plantilla con el formulario con datos, mostrando si lo hemos codificado los errores de validación oportunos.</li>
+</ol>
+</li>
+</ul>
+<p>En nuestro caso la llamada a la vista que hemos puesto en nuestro ejemplo de la calculadora quedaría de la siguiente manera:</p>
+<h5 id="apppy"><strong>app.py</strong><a class="headerlink" href="#apppy" title="Permanent link">&para;</a></h5>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>@app.route(&quot;/calculadora_post&quot;, methods=[&quot;get&quot;,&quot;post&quot;])
+<span class="linenos" data-linenos=" 2 "></span>def calculadora_post():
+<span class="linenos" data-linenos=" 3 "></span>    form=formcalculadora(request.form)
+<span class="linenos" data-linenos=" 4 "></span>    if form.validate_on_submit():
+<span class="linenos" data-linenos=" 5 "></span>        num1=form.num1.data
+<span class="linenos" data-linenos=" 6 "></span>        num2=form.num2.data
+<span class="linenos" data-linenos=" 7 "></span>        operador=form.operador.data
+<span class="linenos" data-linenos=" 8 "></span>        try:
+<span class="linenos" data-linenos=" 9 "></span>            resultado=eval(str(num1)+operador+str(num2))
+<span class="linenos" data-linenos="10 "></span>        except:
+<span class="linenos" data-linenos="11 "></span>            return render_template(&quot;error.html&quot;,error=&quot;No puedo realizar la operación&quot;)
+<span class="linenos" data-linenos="12 "></span>
+<span class="linenos" data-linenos="13 "></span>        return render_template(&quot;resultado.html&quot;,num1=num1,num2=num2,operador=operador,resultado=resultado)  
+<span class="linenos" data-linenos="14 "></span>    else:
+<span class="linenos" data-linenos="15 "></span>        return render_template(&quot;calculadora_post.html&quot;,form=form)       
+</code></pre></div>
+<h5 id="resultadohtml"><strong>resultado.html</strong><a class="headerlink" href="#resultadohtml" title="Permanent link">&para;</a></h5>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>{% extends &quot;base.html&quot; %}
+<span class="linenos" data-linenos="2 "></span>{% block title %}Calculadora{% endblock %}
+<span class="linenos" data-linenos="3 "></span>{% block contenido %}
+<span class="linenos" data-linenos="4 "></span>        &lt;h2&gt;Resultado Calculadora&lt;/h2&gt;
+<span class="linenos" data-linenos="5 "></span>        &lt;h3&gt;{{num1}}{{operador}}{{num2}}={{resultado}}&lt;/h3&gt;
+<span class="linenos" data-linenos="6 "></span>        &lt;a href=&quot;{{url_for(&#39;inicio&#39;)}}&quot;&gt;Volver&lt;/a&gt;
+<span class="linenos" data-linenos="7 "></span>{% endblock %}
+</code></pre></div>
+<h2 id="codigo-ejemplo-de-esta-unidad"><strong>Código ejemplo de esta unidad</strong><a class="headerlink" href="#codigo-ejemplo-de-esta-unidad" title="Permanent link">&para;</a></h2>
+<p><a href="zip/codigo_5_6.zip">Código</a></p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="5_7_subida_ficheros.html" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="5_7_subida_ficheros.html" class="btn btn-xs btn-link">
+        5.7. Subida de Ficheros
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="5_5_formularios.html" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="5_5_formularios.html" class="btn btn-xs btn-link">
+        5.5 Trabajando con formularios
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content"><p>2022-2023 Jesús Vives - Licencia CC BY-NC-SA</p>
+  <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>

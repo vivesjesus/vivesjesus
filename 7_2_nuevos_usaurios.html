@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    
+    <link rel="canonical" href="https://vivesjesus.github.io/iaw/7_2_nuevos_usaurios.html">
+    <link rel="shortcut icon" href="./img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>7.2 Registrando nuevos usuarios - IMPLANTACIÓN APLICACIONES WEB</title>
+    <link href="./css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="./css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="./css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="./css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="./js/jquery-3.2.1.min.js"></script>
+    <script src="./js/bootstrap-3.3.7.min.js"></script>
+    <script src="./js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '.';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Registrando nuevos usuarios", url: "#_top", children: [
+              {title: "Registro de nuevos usuarios", url: "#registro-de-nuevos-usuarios" },
+              {title: "Modificaci\u00f3n de los datos de un usuario (perfil)", url: "#modificacion-de-los-datos-de-un-usuario-perfil" },
+              {title: "Cambio de contrase\u00f1a", url: "#cambio-de-contrasena" },
+              {title: "C\u00f3digo ejemplo de esta unidad", url: "#codigo-ejemplo-de-esta-unidad" },
+          ]},
+        ];
+
+    </script>
+    <script src="./js/base.js"></script>
+      <script src="search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="7_3_gestion_permisos.html" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="7_3_gestion_permisos.html" class="btn btn-xs btn-link">
+        7.3 Gestión de permisos de usuarios
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="7_1_gestion_usuarios.html" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="7_1_gestion_usuarios.html" class="btn btn-xs btn-link">
+        7.1 Gestión de usuarios con sesiones
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="registrando-nuevos-usuarios">Registrando nuevos usuarios<a class="headerlink" href="#registrando-nuevos-usuarios" title="Permanent link">&para;</a></h1>
+<p>En esta unidad vamos a estudiar como un usuario se puede registrar en nuestra aplicación, y una vez registrado podrá cambiar los datos de su perfil. En realidad lo que estamos haciendo es creando y modificando registros en la tabla de usuarios.</p>
+<h2 id="registro-de-nuevos-usuarios">Registro de nuevos usuarios<a class="headerlink" href="#registro-de-nuevos-usuarios" title="Permanent link">&para;</a></h2>
+<p>En la plantilla <code>base.html</code> hemos introducido un enlace para el registro de nuevos usuarios (si no hay un usuario logueado) y para acceder al perfil (si el usuario está logueado):</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>{% if session[&quot;id&quot;] %}
+<span class="linenos" data-linenos="2 "></span>      &lt;a class=&quot;navbar-brand &quot; href=&quot;/perfil/{{ session[&quot;username&quot;]}}&quot;&gt; Perfil&lt;/a&gt;
+<span class="linenos" data-linenos="3 "></span>      &lt;a class=&quot;navbar-brand &quot; href=&quot;/logout&quot;&gt; {{ session[&quot;username&quot;]}} (Salir)&lt;/a&gt;
+<span class="linenos" data-linenos="4 "></span>{% else %}
+<span class="linenos" data-linenos="5 "></span>      &lt;a class=&quot;navbar-brand &quot; href=&quot;/login&quot;&gt;Login&lt;/a&gt;
+<span class="linenos" data-linenos="6 "></span>      &lt;a class=&quot;navbar-brand &quot; href=&quot;/registro&quot;&gt;Registro&lt;/a&gt;
+<span class="linenos" data-linenos="7 "></span>{% endif %}
+</code></pre></div>
+<p>En el programa principal hemos creado una ruta <code>registro</code> que nos permite mostrar el formulario de registro, si los datos introducidos son válidos (el usuario indicado no existe en la base de datos) se crea un nuevo usuario:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>@app.route(&quot;/registro&quot;,methods=[&quot;get&quot;,&quot;post&quot;])
+<span class="linenos" data-linenos=" 2 "></span>def registro():
+<span class="linenos" data-linenos=" 3 "></span>    form=formUsuario()
+<span class="linenos" data-linenos=" 4 "></span>    if form.validate_on_submit():
+<span class="linenos" data-linenos=" 5 "></span>        existe_usuario=Usuarios.query.filter_by(username=form.username.data).first()
+<span class="linenos" data-linenos=" 6 "></span>        if existe_usuario==None:
+<span class="linenos" data-linenos=" 7 "></span>            user=Usuarios()
+<span class="linenos" data-linenos=" 8 "></span>            form.populate_obj(user)
+<span class="linenos" data-linenos=" 9 "></span>            user.admin=False
+<span class="linenos" data-linenos="10 "></span>            db.session.add(user)
+<span class="linenos" data-linenos="11 "></span>            db.session.commit()
+<span class="linenos" data-linenos="12 "></span>            return redirect(url_for(&quot;inicio&quot;))
+<span class="linenos" data-linenos="13 "></span>        form.username.errors.append(&quot;Nombre de usuario ya existe.&quot;)
+<span class="linenos" data-linenos="14 "></span>    return render_template(&quot;usuarios_new.html&quot;,form=form)
+</code></pre></div>
+<p>El formulario utilizado para crear el nuevo usuario se llama <code>formUsuario</code> y lo puedes ver en el fichero <code>forms.py</code>. </p>
+<h2 id="modificacion-de-los-datos-de-un-usuario-perfil">Modificación de los datos de un usuario (perfil)<a class="headerlink" href="#modificacion-de-los-datos-de-un-usuario-perfil" title="Permanent link">&para;</a></h2>
+<p>El usuario puede modificar sus datos accediendo a la ruta <code>perfil</code>. Utilizamos el mismo formulario <code>formUsuario</code>, pero la plantilla que lo visualiza (<code>usuarios_new.html</code>) muestra elementos diferentes según sea el registro o el perfil:</p>
+<ul>
+<li>
+<p>Si estamos registrando un nuevo usuario muestra un cuadro de texto para introducir el nombre de usuario, si estamos en el perfil muestra el mismo cuadro de texto pero en modo sólo lectura, para simplificar el proceso:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>{% if not perfil %}
+<span class="linenos" data-linenos="2 "></span>  {{form.username.label() }}{{form.username(size=&quot;100&quot;,class=&quot;form-control&quot;)}}&lt;br/&gt;
+<span class="linenos" data-linenos="3 "></span>{% else %}
+<span class="linenos" data-linenos="4 "></span>  {{form.username.label() }}{{form.username(readonly=&quot;readonly&quot;,size=&quot;100&quot;,class=&quot;form-control&quot;)}}&lt;br/&gt;
+<span class="linenos" data-linenos="5 "></span>{% endif %}
+</code></pre></div>
+</li>
+<li>
+<p>Si estamos registrando un nuevo usuario muestra un cuadro de texto para introducir la contraseña, si estamos en el perfil muestra un enlace para cambiar la contraseña:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>{% if not perfil %}
+<span class="linenos" data-linenos="2 "></span>  {{form.password.label() }}{{form.password(size=&quot;100&quot;,class=&quot;form-control&quot;)}}&lt;br/&gt;
+<span class="linenos" data-linenos="3 "></span>{% else %}
+<span class="linenos" data-linenos="4 "></span>  &lt;a href=&quot;/changepassword/{{session[&quot;username&quot;]}}&quot;&gt;Cambiar contraseña&lt;/a&gt;&lt;br/&gt;
+<span class="linenos" data-linenos="5 "></span>{% endif %}
+</code></pre></div>
+</li>
+</ul>
+<p>La ruta <code>perfil</code> muetra el formulario y cambia los datos que modifiquemos, menos la contraseña:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>@app.route(&#39;/perfil/&lt;username&gt;&#39;, methods=[&quot;get&quot;,&quot;post&quot;])
+<span class="linenos" data-linenos=" 2 "></span>def perfil(username):
+<span class="linenos" data-linenos=" 3 "></span>    user=Usuarios.query.filter_by(username=username).first()
+<span class="linenos" data-linenos=" 4 "></span>    if user is None:
+<span class="linenos" data-linenos=" 5 "></span>        abort(404)
+<span class="linenos" data-linenos=" 6 "></span>
+<span class="linenos" data-linenos=" 7 "></span>    form=formUsuario(request.form,obj=user)
+<span class="linenos" data-linenos=" 8 "></span>    del form.password   
+<span class="linenos" data-linenos=" 9 "></span>    if form.validate_on_submit():
+<span class="linenos" data-linenos="10 "></span>        form.populate_obj(user)
+<span class="linenos" data-linenos="11 "></span>        db.session.commit()
+<span class="linenos" data-linenos="12 "></span>        return redirect(url_for(&quot;inicio&quot;))
+<span class="linenos" data-linenos="13 "></span>
+<span class="linenos" data-linenos="14 "></span>    return render_template(&quot;usuarios_new.html&quot;,form=form,perfil=True)
+</code></pre></div>
+<h2 id="cambio-de-contrasena">Cambio de contraseña<a class="headerlink" href="#cambio-de-contrasena" title="Permanent link">&para;</a></h2>
+<p>Un usuario registrado también puede cambiar su contraseña, pero lo hemos realizado en una plantilla independiente (<code>changepassword.html</code>) y un formulario <code>formChangePassword</code>. Para realizar el cambio de contraseña hemos creado la ruta <code>changepassword</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>@app.route(&#39;/changepassword/&lt;username&gt;&#39;, methods=[&quot;get&quot;,&quot;post&quot;])
+<span class="linenos" data-linenos=" 2 "></span>def changepassword(username):
+<span class="linenos" data-linenos=" 3 "></span>    user=Usuarios.query.filter_by(username=username).first()
+<span class="linenos" data-linenos=" 4 "></span>    if user is None:
+<span class="linenos" data-linenos=" 5 "></span>        abort(404)
+<span class="linenos" data-linenos=" 6 "></span>
+<span class="linenos" data-linenos=" 7 "></span>    form=formChangePassword()
+<span class="linenos" data-linenos=" 8 "></span>    if form.validate_on_submit():
+<span class="linenos" data-linenos=" 9 "></span>        form.populate_obj(user)
+<span class="linenos" data-linenos="10 "></span>        db.session.commit()
+<span class="linenos" data-linenos="11 "></span>        return redirect(url_for(&quot;inicio&quot;))
+<span class="linenos" data-linenos="12 "></span>
+<span class="linenos" data-linenos="13 "></span>    return render_template(&quot;changepassword.html&quot;,form=form)
+</code></pre></div>
+<h2 id="codigo-ejemplo-de-esta-unidad">Código ejemplo de esta unidad<a class="headerlink" href="#codigo-ejemplo-de-esta-unidad" title="Permanent link">&para;</a></h2>
+<p><a href="../../ejemplos/u28">Código</a></p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="7_3_gestion_permisos.html" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="7_3_gestion_permisos.html" class="btn btn-xs btn-link">
+        7.3 Gestión de permisos de usuarios
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="7_1_gestion_usuarios.html" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="7_1_gestion_usuarios.html" class="btn btn-xs btn-link">
+        7.1 Gestión de usuarios con sesiones
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content"><p>2022-2023 Jesús Vives - Licencia CC BY-NC-SA</p>
+  <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>

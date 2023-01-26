@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    
+    <link rel="canonical" href="https://vivesjesus.github.io/iaw/2_2_web_dinamica.html">
+    <link rel="shortcut icon" href="./img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>2.2 Programación web dinámica - IMPLANTACIÓN APLICACIONES WEB</title>
+    <link href="./css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="./css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="./css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="./css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="./js/jquery-3.2.1.min.js"></script>
+    <script src="./js/bootstrap-3.3.7.min.js"></script>
+    <script src="./js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '.';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Programaci\u00f3n web din\u00e1mica", url: "#_top", children: [
+              {title: "P\u00e1ginas web din\u00e1micas", url: "#paginas-web-dinamicas" },
+              {title: "Procesamiento de p\u00e1ginas din\u00e1micas", url: "#procesamiento-de-paginas-dinamicas" },
+              {title: "Acceso a una base de datos", url: "#acceso-a-una-base-de-datos" },
+              {title: "Programaci\u00f3n web din\u00e1mica con python", url: "#programacion-web-dinamica-con-python" },
+          ]},
+        ];
+
+    </script>
+    <script src="./js/base.js"></script>
+      <script src="search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="2_3_mvc.html" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="2_3_mvc.html" class="btn btn-xs btn-link">
+        2.3 Patrón modelo-vista-controlador
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="2_1_protocolo_http.html" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="2_1_protocolo_http.html" class="btn btn-xs btn-link">
+        2.1. Protocolo HTTP
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="programacion-web-dinamica"><strong>Programación web dinámica</strong><a class="headerlink" href="#programacion-web-dinamica" title="Permanent link">&para;</a></h1>
+<ul>
+<li><a align="left" href="pdf/u2.pdf">Presentación de la Unidad</a></li>
+</ul>
+<h2 id="paginas-web-dinamicas"><strong>Páginas web dinámicas</strong><a class="headerlink" href="#paginas-web-dinamicas" title="Permanent link">&para;</a></h2>
+<hr />
+<p>Las páginas web dinámicas son aquellas en las que la información presentada se genera a partir de una petición del usuario de la página.</p>
+<p>Contrariamente a lo que ocurre con las páginas estáticas, en las que su contenido se encuentra predeterminado, en las páginas dinámicas la información aparece inmediatamente después de una solicitud echa por el usuario.</p>
+<p>El resultado de la página obtenida en la respuesta dependerá de varios aspectos: información guardada en la base de datos, contenido de una cookie o sesión, parámetros en la petición HTTP,…</p>
+<h2 id="procesamiento-de-paginas-dinamicas"><strong>Procesamiento de páginas dinámicas</strong><a class="headerlink" href="#procesamiento-de-paginas-dinamicas" title="Permanent link">&para;</a></h2>
+<hr />
+<p>Cuando el servidor Web recibe una petición para mostrar una página dinámica, transfiere la página a un software especial encargado de finalizar la página. Este software especial se denomina servidor de aplicaciones.</p>
+<p>El servidor de aplicaciones, según la petición que se ha realizado ejecuta un programa en un lenguaje de programación determinado y devuelve una respuesta HTTP, cuyo contenido normalmente es una página HTML. Esquemáticamente lo podemos ver de la siguiente manera:</p>
+<p><img alt="imagen" src="imagenes/webserver.png" /></p>
+<h2 id="acceso-a-una-base-de-datos"><strong>Acceso a una base de datos</strong><a class="headerlink" href="#acceso-a-una-base-de-datos" title="Permanent link">&para;</a></h2>
+<hr />
+<p>Un servidor de aplicaciones le permite trabajar con recursos del lado del servidor, como las bases de datos. Por ejemplo, una página dinámica puede indicar al servidor de aplicaciones que extraiga datos de una base de datos y los inserte en el código HTML de la página.</p>
+<p>El uso de una base de datos para almacenar contenido permite separar el diseño del sitio Web del contenido que se desea mostrar a los usuarios del sitio. En lugar de escribir archivos HTML individuales para cada página, sólo se necesita escribir una página —o plantilla— para presentar los datos de la base de datos al usuario. También de forma dinámica se puede presentar formularios HTML que añadan o modifiquen información en la base de datos. Esquemáticamente lo podemos ver de la siguiente manera:</p>
+<p><img alt="imagen" src="imagenes/accesoBD.png" /></p>
+<h2 id="programacion-web-dinamica-con-python"><strong> Programación web dinámica con python</strong><a class="headerlink" href="#programacion-web-dinamica-con-python" title="Permanent link">&para;</a></h2>
+<hr />
+<p>Como lenguaje de programación web vamos a utilizar Python, como servidor de aplicaciones vamos a usar el concepto de WSGI (Web Server Gateway Interface), que es una especificación de una interface simple y universal entre los servidores web y las aplicaciones web o frameworks desarrolladas con python.</p>
+<p>En concreto usaremos un framework python (llamado Flask) para desarrollar aplicaciones web dinámicas siguiendo el patrón de modelo-vista-controlador. Estos conceptos los estudiaremos en la siguientes unidades.</p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="2_3_mvc.html" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="2_3_mvc.html" class="btn btn-xs btn-link">
+        2.3 Patrón modelo-vista-controlador
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="2_1_protocolo_http.html" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="2_1_protocolo_http.html" class="btn btn-xs btn-link">
+        2.1. Protocolo HTTP
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content"><p>2022-2023 Jesús Vives - Licencia CC BY-NC-SA</p>
+  <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>

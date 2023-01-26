@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    
+    <link rel="canonical" href="https://vivesjesus.github.io/iaw/5_5_formularios.html">
+    <link rel="shortcut icon" href="./img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>5.5 Trabajando con formularios - IMPLANTACIÓN APLICACIONES WEB</title>
+    <link href="./css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="./css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="./css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="./css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="./js/jquery-3.2.1.min.js"></script>
+    <script src="./js/bootstrap-3.3.7.min.js"></script>
+    <script src="./js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '.';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Trabajando con formularios", url: "#_top", children: [
+              {title: "Ejemplo de calculadora", url: "#ejemplo-de-calculadora" },
+              {title: "Calculadora con POST", url: "#calculadora-con-post" },
+              {title: "Calculadora con GET", url: "#calculadora-con-get" },
+              {title: "Utilizar rutas din\u00e1micas", url: "#utilizar-rutas-dinamicas" },
+              {title: "Formulario completo", url: "#formulario-completo" },
+          ]},
+        ];
+
+    </script>
+    <script src="./js/base.js"></script>
+      <script src="search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="5_6_formularios_flask_wtf.html" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="5_6_formularios_flask_wtf.html" class="btn btn-xs btn-link">
+        5.6 Generando formularios con flask-wtf
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="5_4_plant_boostrap.html" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="5_4_plant_boostrap.html" class="btn btn-xs btn-link">
+        5.4 Plantillas con bootstrap (flask-bootstrap)
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="trabajando-con-formularios"><strong>Trabajando con formularios</strong><a class="headerlink" href="#trabajando-con-formularios" title="Permanent link">&para;</a></h1>
+<p>La manera más usual de enviar información a las distintas páginas de nuestra aplicación web es usando formularios HTML5. Es recomendable utilizar el método POST (la información se envía en el cuerpo de la petición) para el envío de información usando formularios, aunque si es necesario también podemos usar el método GET (la información se envía en la URL de la petición).</p>
+<h2 id="ejemplo-de-calculadora"><strong>Ejemplo de calculadora</strong><a class="headerlink" href="#ejemplo-de-calculadora" title="Permanent link">&para;</a></h2>
+<hr />
+<p>En el código ejemplo de esta unidad hemos desarrollado una calculadora, en una plantilla creamos un formulario donde se piden dos números y un operador. Según el operador seleccionado, se muestra el resultado.</p>
+<h2 id="calculadora-con-post"><strong>Calculadora con POST</strong><a class="headerlink" href="#calculadora-con-post" title="Permanent link">&para;</a></h2>
+<hr />
+<p>Como hemos indicado anteriormente al enviar la información con un formulario se manda con el método POST. Cuando accedemos la primera vez a la ruta /calculadora_post lo estamos haciendo usando el método GET por lo tanto nos devuelve una plantilla donde mostramos el formulario (la plantilla se llama calculadora_post.html):</p>
+<h5 id="templatecalculadora_posthtml"><strong>template/calculadora_post.html</strong><a class="headerlink" href="#templatecalculadora_posthtml" title="Permanent link">&para;</a></h5>
+<p><div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>{% extends &quot;base.html&quot; %}
+<span class="linenos" data-linenos=" 2 "></span>{% block title %}Calculadora{% endblock %}
+<span class="linenos" data-linenos=" 3 "></span>{% block contenido %}
+<span class="linenos" data-linenos=" 4 "></span>        &lt;h2&gt;Calculadora&lt;/h2&gt;
+<span class="linenos" data-linenos=" 5 "></span>        &lt;form action={{url_for(&quot;calculadora_post&quot;)}} method=&quot;post&quot;&gt;
+<span class="linenos" data-linenos=" 6 "></span>        Número1: &lt;input type=&quot;text&quot; name=&quot;num1&quot; autofocus required /&gt;
+<span class="linenos" data-linenos=" 7 "></span>        &lt;br /&gt;
+<span class="linenos" data-linenos=" 8 "></span>        Número2: &lt;input type=&quot;text&quot; name=&quot;num2&quot; autofocus required /&gt;
+<span class="linenos" data-linenos=" 9 "></span>        &lt;br /&gt;
+<span class="linenos" data-linenos="10 "></span>        Operación: 
+<span class="linenos" data-linenos="11 "></span>        &lt;select name=&quot;operador&quot;&gt;
+<span class="linenos" data-linenos="12 "></span>            &lt;option value=&quot;+&quot;&gt;Suma&lt;/option&gt;
+<span class="linenos" data-linenos="13 "></span>            &lt;option value=&quot;-&quot;&gt;Resta&lt;/option&gt;
+<span class="linenos" data-linenos="14 "></span>            &lt;option value=&quot;*&quot;&gt;Multiplicación&lt;/option&gt;
+<span class="linenos" data-linenos="15 "></span>            &lt;option value=&quot;/&quot;&gt;División&lt;/option&gt;
+<span class="linenos" data-linenos="16 "></span>        &lt;/select&gt; 
+<span class="linenos" data-linenos="17 "></span>        &lt;br/&gt;
+<span class="linenos" data-linenos="18 "></span>        &lt;input type=&quot;submit&quot; value=&quot;Submit!&quot; /&gt;
+<span class="linenos" data-linenos="19 "></span>        &lt;/form&gt;
+<span class="linenos" data-linenos="20 "></span>{% endblock %}
+</code></pre></div>
+Mandamos tres datos: num1, num2 y operador a la misma ruta /calculadora_post pero en esta ocasión se utiliza el método POST, en este caso se lee los datos del formulario, se calcula la operación y se muestra una plantilla con el resultado:</p>
+<h5 id="anadir-a-apppy"><strong>Añadir a app.py </strong><a class="headerlink" href="#anadir-a-apppy" title="Permanent link">&para;</a></h5>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>@app.route(&quot;/calculadora_post&quot;, methods=[&quot;get&quot;,&quot;post&quot;])
+<span class="linenos" data-linenos=" 2 "></span>def calculadora_post():
+<span class="linenos" data-linenos=" 3 "></span>    if request.method==&quot;POST&quot;:
+<span class="linenos" data-linenos=" 4 "></span>        num1=request.form.get(&quot;num1&quot;)
+<span class="linenos" data-linenos=" 5 "></span>        num2=request.form.get(&quot;num2&quot;)
+<span class="linenos" data-linenos=" 6 "></span>        operador=request.form.get(&quot;operador&quot;)
+<span class="linenos" data-linenos=" 7 "></span>
+<span class="linenos" data-linenos=" 8 "></span>        try:
+<span class="linenos" data-linenos=" 9 "></span>            resultado=eval(num1+operador+num2)
+<span class="linenos" data-linenos="10 "></span>        except:
+<span class="linenos" data-linenos="11 "></span>            return render_template(&quot;error.html&quot;,error=&quot;No puedo realizar la operación&quot;)
+<span class="linenos" data-linenos="12 "></span>
+<span class="linenos" data-linenos="13 "></span>        return render_template(&quot;resultado.html&quot;,num1=num1,num2=num2,operador=operador,resultado=resultado)  
+<span class="linenos" data-linenos="14 "></span>    else:
+<span class="linenos" data-linenos="15 "></span>        return render_template(&quot;calculadora_post.html&quot;)
+</code></pre></div>
+<h2 id="calculadora-con-get"><strong>Calculadora con GET</strong><a class="headerlink" href="#calculadora-con-get" title="Permanent link">&para;</a></h2>
+<hr />
+<p>No es habitual pero vemos el mismo programa pero en este caso enviando la información del formulario con el método GET. En este caso al acceder a la ruta /calculadora_get tenemos que determinar si es la primera vez que hemos accedido, para ello comprobamos si la URL tiene algún argumento (len(request.args)&gt;0) sino tiene argumentos mostramos una plantilla con el formulario, igual que en la anterior excepto en la definición del formulario:
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>...
+<span class="linenos" data-linenos="2 "></span>&lt;form action={{url_for(&quot;calculadora_get&quot;)}} method=&quot;get&quot;&gt;
+<span class="linenos" data-linenos="3 "></span>...
+</code></pre></div>
+Si la URL tiene parámetros (len(request.args)&gt;0) leemos los parámetros y realizamos la operación, sería similar al programa anterior, lo que cambia es cómo se leen los parámetros de la URL:
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>@app.route(&quot;/calculadora_get&quot;, methods=[&quot;get&quot;])
+<span class="linenos" data-linenos="2 "></span>def calculadora_get():
+<span class="linenos" data-linenos="3 "></span>    if request.method==&quot;GET&quot; and len(request.args)&gt;0:
+<span class="linenos" data-linenos="4 "></span>        num1=request.args.get(&quot;num1&quot;)
+<span class="linenos" data-linenos="5 "></span>        num2=request.args.get(&quot;num2&quot;)
+<span class="linenos" data-linenos="6 "></span>        operador=request.args.get(&quot;operador&quot;)
+<span class="linenos" data-linenos="7 "></span>...
+</code></pre></div></p>
+<h2 id="utilizar-rutas-dinamicas"><strong>Utilizar rutas dinámicas</strong><a class="headerlink" href="#utilizar-rutas-dinamicas" title="Permanent link">&para;</a></h2>
+<hr />
+<p>Cuando se envía información con formularios debemos usar el método POST, si vamos a mandar información en la URL deberíamos usar rutas dinámicas:
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>@app.route(&quot;/calculadora/&lt;operador&gt;/&lt;num1&gt;/&lt;num2&gt;&quot;, methods=[&quot;get&quot;])
+<span class="linenos" data-linenos="2 "></span>def calculadora_var(operador,num1,num2):
+<span class="linenos" data-linenos="3 "></span>    ...
+</code></pre></div></p>
+<h2 id="formulario-completo"><strong>Formulario completo</strong><a class="headerlink" href="#formulario-completo" title="Permanent link">&para;</a></h2>
+<hr />
+<p>En otro ejercicio del código ejemplo, puedes comprobar que hemos realizado un formulario con muchos tipos de campos, cómo hemos leído esa información y la hemos enviado a una plantilla para mostrarlos. (¡¡¡Comprueba en el código la contraseña que tienes que introducir para que el programa funcione!!!)</p>
+<p>Código ejemplo de esta unidad
+<a href="zip/codigo_5_5.zip">Código</a></p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="5_6_formularios_flask_wtf.html" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="5_6_formularios_flask_wtf.html" class="btn btn-xs btn-link">
+        5.6 Generando formularios con flask-wtf
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="5_4_plant_boostrap.html" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="5_4_plant_boostrap.html" class="btn btn-xs btn-link">
+        5.4 Plantillas con bootstrap (flask-bootstrap)
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content"><p>2022-2023 Jesús Vives - Licencia CC BY-NC-SA</p>
+  <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>

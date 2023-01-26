@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    
+    <link rel="canonical" href="https://vivesjesus.github.io/iaw/6_6_borrando.html">
+    <link rel="shortcut icon" href="./img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>6.6. Borrando un Registro - IMPLANTACIÓN APLICACIONES WEB</title>
+    <link href="./css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="./css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="./css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="./css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="./js/jquery-3.2.1.min.js"></script>
+    <script src="./js/bootstrap-3.3.7.min.js"></script>
+    <script src="./js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '.';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Borrando un registro de la base de datos", url: "#_top", children: [
+              {title: "Modificando art\u00edculos", url: "#modificando-articulos" },
+              {title: "Modificaci\u00f3n en el modelo de datos", url: "#modificacion-en-el-modelo-de-datos" },
+              {title: "Borrando art\u00edculos", url: "#borrando-articulos" },
+              {title: "Borrando categor\u00edas", url: "#borrando-categorias" },
+              {title: "C\u00f3digo ejemplo de esta unidad", url: "#codigo-ejemplo-de-esta-unidad" },
+          ]},
+        ];
+
+    </script>
+    <script src="./js/base.js"></script>
+      <script src="search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="7_1_gestion_usuarios.html" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="7_1_gestion_usuarios.html" class="btn btn-xs btn-link">
+        7.1 Gestión de usuarios con sesiones
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="6_5_modificando.html" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="6_5_modificando.html" class="btn btn-xs btn-link">
+        6.5 Modificando registros en la base de datos
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="borrando-un-registro-de-la-base-de-datos">Borrando un registro de la base de datos<a class="headerlink" href="#borrando-un-registro-de-la-base-de-datos" title="Permanent link">&para;</a></h1>
+<p>En este apartado vamos a estudiar como borrar un registro en nuestra base de datos.</p>
+<h2 id="modificando-articulos">Modificando artículos<a class="headerlink" href="#modificando-articulos" title="Permanent link">&para;</a></h2>
+<h2 id="modificacion-en-el-modelo-de-datos">Modificación en el modelo de datos<a class="headerlink" href="#modificacion-en-el-modelo-de-datos" title="Permanent link">&para;</a></h2>
+<p>Vamos a modificar nuestro modelo de datos, para indicar que vamos a borrar en cascada en nuestra relación, es decir al borrar una categoría vamos a borrar todos los videojuegos de esa categoría, para ello en el fichero <code>models.py</code> cambiamos la siguiente línea en el modelo <code>Categorias</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>articulos = relationship(&quot;Articulos&quot;, cascade=&quot;all, delete-orphan&quot;, backref=&quot;Categorias&quot;,lazy=&#39;dynamic&#39;)
+</code></pre></div>
+<p>Tenemos que volver a generar la base de datos para que tenga efecto este cambio.</p>
+<h2 id="borrando-articulos">Borrando artículos<a class="headerlink" href="#borrando-articulos" title="Permanent link">&para;</a></h2>
+<p>Lo primero es insertar un enlace en la página principal que nos permita borrar artículos (se añade un enlace por cada artículo), para ello en la plantilla <code>inicio.html</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>&lt;td&gt;&lt;a href=&quot;{{url_for(&#39;articulos_delete&#39;,id=art.id)}}&quot;&gt;&lt;span class=&quot;glyphicon glyphicon-trash&quot;&gt;&lt;/span&gt; Borrar&lt;/a&gt;&lt;/td&gt;
+</code></pre></div>
+<ul>
+<li>
+<p>Vamos a usar un formulario (<code>formSINO</code>) para confirmar que queremos borrar una artículo. Este formulario, simplemente nos ofrece dos botones (Sí o No) para confirmar el borrado. En el fichero <code>forms.py</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>class formSINO(FlaskForm):      
+<span class="linenos" data-linenos="2 "></span>    si = SubmitField(&#39;Si&#39;) 
+<span class="linenos" data-linenos="3 "></span>    no = SubmitField(&#39;No&#39;)
+</code></pre></div>
+</li>
+<li>
+<p>Utilizamos el template <code>articulos_delete.html</code> para mostrar el formulario.</p>
+</li>
+<li>
+<p>En el programa principal, vamos a crear una ruta dinámica, que nos permite borrar un registro según su identificador:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>@app.route(&#39;/articulos/&lt;id&gt;/delete&#39;, methods=[&quot;get&quot;,&quot;post&quot;])
+</code></pre></div>
+</li>
+<li>
+<p>Lo primero que hacemos es seleccionar el artículo según el identificador recibido en la ruta, sino existe el artículo devolvemos un error:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>art=Articulos.query.get(id)
+<span class="linenos" data-linenos="2 "></span>    if art is None:
+<span class="linenos" data-linenos="3 "></span>        abort(404)
+</code></pre></div>
+</li>
+<li>
+<p>Creamos un formulario para confirmar el borrado (<code>formSINO</code>). Si en el formulario pulsamo "Si":</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>form=formSINO()
+<span class="linenos" data-linenos="2 "></span>if form.validate_on_submit():
+<span class="linenos" data-linenos="3 "></span>    if form.si.data:
+<span class="linenos" data-linenos="4 "></span>        if art.image!=&quot;&quot;:
+<span class="linenos" data-linenos="5 "></span>            os.remove(app.root_path+&quot;/static/upload/&quot;+art.image)
+<span class="linenos" data-linenos="6 "></span>        db.session.delete(art)
+<span class="linenos" data-linenos="7 "></span>        db.session.commit()
+<span class="linenos" data-linenos="8 "></span>    return redirect(url_for(&quot;inicio&quot;))
+<span class="linenos" data-linenos="9 "></span>return render_template(&quot;articulos_delete.html&quot;,form=form,art=art)
+</code></pre></div>
+<p>Se realizan las siguientes acciones:</p>
+<ul>
+<li>Borramos el fichero de la imagen correspondiente, si tenía una imagen asociada..</li>
+<li>Se borra el objeto <code>Articulos</code> que hemos seleccionado.</li>
+<li>Si el formulario no es válido o hemos pulsado "No" volvemos a la página principal.</li>
+</ul>
+</li>
+</ul>
+<h2 id="borrando-categorias">Borrando categorías<a class="headerlink" href="#borrando-categorias" title="Permanent link">&para;</a></h2>
+<p>De una forma similar puedes estudiar el código para ver cómo se borran las categorías en nuestra base de datos. Comprueba que al borrar una categoría se borran todos los videojuegos asociados.</p>
+<h2 id="codigo-ejemplo-de-esta-unidad">Código ejemplo de esta unidad<a class="headerlink" href="#codigo-ejemplo-de-esta-unidad" title="Permanent link">&para;</a></h2>
+<p><a href="../../ejemplos/u26">Código</a></p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="7_1_gestion_usuarios.html" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="7_1_gestion_usuarios.html" class="btn btn-xs btn-link">
+        7.1 Gestión de usuarios con sesiones
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="6_5_modificando.html" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="6_5_modificando.html" class="btn btn-xs btn-link">
+        6.5 Modificando registros en la base de datos
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content"><p>2022-2023 Jesús Vives - Licencia CC BY-NC-SA</p>
+  <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>

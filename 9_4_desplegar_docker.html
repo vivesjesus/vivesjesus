@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    
+    <link rel="canonical" href="https://vivesjesus.github.io/iaw/9_4_desplegar_docker.html">
+    <link rel="shortcut icon" href="./img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>9.4 Despliegue de aplicación flask en un contenedor docker - IMPLANTACIÓN APLICACIONES WEB</title>
+    <link href="./css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="./css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="./css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="./css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="./js/jquery-3.2.1.min.js"></script>
+    <script src="./js/bootstrap-3.3.7.min.js"></script>
+    <script src="./js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '.';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Despliegue de aplicaci\u00f3n flask en un contenedor docker", url: "#_top", children: [
+              {title: "Contenedor de base de datos", url: "#contenedor-de-base-de-datos" },
+              {title: "Creando la imagen para el contenedor de nuestra aplicaci\u00f3n", url: "#creando-la-imagen-para-el-contenedor-de-nuestra-aplicacion" },
+              {title: "Contenedor con nuestra aplicaci\u00f3n", url: "#contenedor-con-nuestra-aplicacion" },
+          ]},
+        ];
+
+    </script>
+    <script src="./js/base.js"></script>
+      <script src="search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav">
+      <a href="9_3_desplegar_heroku.html" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="9_3_desplegar_heroku.html" class="btn btn-xs btn-link">
+        9.3 Despliegue de aplicación flask en un PaaS Heroku
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="despliegue-de-aplicacion-flask-en-un-contenedor-docker">Despliegue de aplicación flask en un contenedor docker<a class="headerlink" href="#despliegue-de-aplicacion-flask-en-un-contenedor-docker" title="Permanent link">&para;</a></h1>
+<p>Vamos a desplegar nuestra aplicación web desarrollada con flask en docker. Vamos a utilizar dos contenedores: uno para la base de datos mysql y otro para nuestra aplicación.</p>
+<p>Seguimos las <a href="https://docs.docker.com/engine/installation/linux/docker-ce/ubuntu/">instrucciones de la documentación de docker</a> para realizar la instalación en Ubuntu 16.04.</p>
+<h2 id="contenedor-de-base-de-datos">Contenedor de base de datos<a class="headerlink" href="#contenedor-de-base-de-datos" title="Permanent link">&para;</a></h2>
+<p>Vamos a arrancar un contenedor que nos sirva la base de datos, indicamos la contraseña del usuario root y creamos una base de datos:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>sudo docker run --name servidor_mysql -e MYSQL_DATABASE=tienda -e MYSQL_ROOT_PASSWORD=asdasd -d mysql
+</code></pre></div>
+<p>En al configuración de la conexión a la base de datos de nuestra aplicación, en el fichero <code>config.py</code> tendremos que indicar los parámetros de conexión y la contraseña del root de mysql que vamos a mandar cunado creemos el contenedor, de la siguiente manera:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>SQLALCHEMY_DATABASE_URI = &#39;mysql+pymysql://root:{}@{}/tienda&#39;.format(os.environ[&quot;MYSQL_PASSWORD&quot;],os.environ[&quot;MYSQL_PORT_3306_TCP_ADDR&quot;])
+</code></pre></div>
+<h2 id="creando-la-imagen-para-el-contenedor-de-nuestra-aplicacion">Creando la imagen para el contenedor de nuestra aplicación<a class="headerlink" href="#creando-la-imagen-para-el-contenedor-de-nuestra-aplicacion" title="Permanent link">&para;</a></h2>
+<p>Clonamos la rama <code>docker</code> del repositorio github donde tenemos los ficheros de nuestra aplicación:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>$ git clone https://github.com/josedom24/tienda_videojuegos.git -b docker
+</code></pre></div>
+<p>En el repositorio tenemos un fichero <code>Dockerfile</code> donde definimos las instrucciones que vamos a ejecutar para crear la imagen docker:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>FROM ubuntu:16.04
+<span class="linenos" data-linenos=" 2 "></span>MAINTAINER José Domingo Muñoz
+<span class="linenos" data-linenos=" 3 "></span>RUN apt-get update -y &amp;&amp; apt-get install -y \
+<span class="linenos" data-linenos=" 4 "></span>        apache2 \
+<span class="linenos" data-linenos=" 5 "></span>        libapache2-mod-wsgi-py3 \
+<span class="linenos" data-linenos=" 6 "></span>        python3-pip \
+<span class="linenos" data-linenos=" 7 "></span>        &amp;&amp; apt-get clean &amp;&amp; rm -rf /var/lib/apt/lists/*
+<span class="linenos" data-linenos=" 8 "></span>ADD /tienda_videojuegos /var/www/html/tienda_videojuegos
+<span class="linenos" data-linenos=" 9 "></span>RUN chown www-data:www-data -R /var/www/html/tienda_videojuegos
+<span class="linenos" data-linenos="10 "></span>RUN pip3 install -r /var/www/html/tienda_videojuegos/requirements.txt
+<span class="linenos" data-linenos="11 "></span>ADD 000-default.conf /etc/apache2/sites-available/
+<span class="linenos" data-linenos="12 "></span>ADD app.wsgi /var/www/html/tienda_videojuegos
+<span class="linenos" data-linenos="13 "></span>RUN service apache2 restart
+<span class="linenos" data-linenos="14 "></span>ENV APACHE_RUN_USER www-data
+<span class="linenos" data-linenos="15 "></span>ENV APACHE_RUN_GROUP www-data
+<span class="linenos" data-linenos="16 "></span>ENV APACHE_LOG_DIR /var/log/apache2
+<span class="linenos" data-linenos="17 "></span>EXPOSE 80
+<span class="linenos" data-linenos="18 "></span>WORKDIR /var/www/html/tienda_videojuegos
+<span class="linenos" data-linenos="19 "></span>COPY ./run.sh /
+<span class="linenos" data-linenos="20 "></span>ENTRYPOINT [&quot;/run.sh&quot;]
+</code></pre></div>
+<p>También tenemos el fichero donde creamos la aplicación WSGI, <code>app.wsgi</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>import sys
+<span class="linenos" data-linenos="2 "></span>sys.path.insert(0, &#39;/var/www/html/tienda_videojuegos&#39;)
+<span class="linenos" data-linenos="3 "></span>from aplicacion.app import app as application
+</code></pre></div>
+<p>El fichero de configuración del virtualhost de apache2: <code>000-default.conf</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>...
+<span class="linenos" data-linenos=" 2 "></span>DocumentRoot /var/www/html/tienda_videojuegos/aplicacion
+<span class="linenos" data-linenos=" 3 "></span>WSGIDaemonProcess tienda user=www-data group=www-data threads=5
+<span class="linenos" data-linenos=" 4 "></span>WSGIScriptAlias / /var/www/html/tienda_videojuegos/app.wsgi
+<span class="linenos" data-linenos=" 5 "></span>
+<span class="linenos" data-linenos=" 6 "></span>&lt;Directory /var/www/html/tienda_videojuegos/aplicacion&gt;
+<span class="linenos" data-linenos=" 7 "></span>    WSGIProcessGroup tienda
+<span class="linenos" data-linenos=" 8 "></span>    WSGIApplicationGroup %{GLOBAL}
+<span class="linenos" data-linenos=" 9 "></span>    Require all granted
+<span class="linenos" data-linenos="10 "></span>&lt;/Directory&gt;
+<span class="linenos" data-linenos="11 "></span>...
+</code></pre></div>
+<p>Y por último el fichero <code>run.sh</code> que el script que se va a ejecutar cuando creemos el contenedor:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>#!/bin/bash
+<span class="linenos" data-linenos="2 "></span>python3 manage.py create_tables
+<span class="linenos" data-linenos="3 "></span>python3 manage.py add_data_tables
+<span class="linenos" data-linenos="4 "></span>/usr/sbin/apache2ctl -D FOREGROUND
+</code></pre></div>
+<p>Creamos las tablas con los datos de ejemplo de la base de datos y ejecutamos el servidor apache2.</p>
+<p>Para crear la imagen ejecutamos el siguiente comando:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>$ cd tienda_videojuegos
+<span class="linenos" data-linenos="2 "></span>$ sudo docker build -t tienda .
+</code></pre></div>
+<p>Y comprobamos que hemos generado la nueva imagen:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>$ sudo docker image ls
+<span class="linenos" data-linenos="2 "></span>REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+<span class="linenos" data-linenos="3 "></span>tienda              latest              bb1d87c90448        46 hours ago        474MB
+<span class="linenos" data-linenos="4 "></span>ubuntu              16.04               ccc7a11d65b1        11 days ago         120MB
+<span class="linenos" data-linenos="5 "></span>mysql               latest              c73c7527c03a        3 weeks ago         412MB
+</code></pre></div>
+<h2 id="contenedor-con-nuestra-aplicacion">Contenedor con nuestra aplicación<a class="headerlink" href="#contenedor-con-nuestra-aplicacion" title="Permanent link">&para;</a></h2>
+<p>Para crear el contenedor con nuestra aplicación:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>$ sudo docker run --name mytienda -e MYSQL_PASSWORD=asdasd -p 8080:80 --link servidor_mysql:mysql -d tienda
+</code></pre></div>
+<p>Comprobamos que los contenedores se están ejecutando:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>$ sudo docker ls
+<span class="linenos" data-linenos="2 "></span>CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                  NAMES
+<span class="linenos" data-linenos="3 "></span>08eadf7d87b0        tienda              &quot;/run.sh&quot;                4 seconds ago       Up 3 seconds        0.0.0.0:8080-&gt;80/tcp   mytienda
+<span class="linenos" data-linenos="4 "></span>6ccff57702ba        mysql               &quot;docker-entrypoint...&quot;   16 seconds ago      Up 16 seconds       3306/tcp               servidor_mysql
+</code></pre></div>
+<p>Si queremos crear el usuario administrador de nuestra aplicación podemos acceder de forma interactiva a nuestro contenedor para ejecutar la instrucción necesaria:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>$ sudo docker exec -i -t mytienda /bin/bash 
+<span class="linenos" data-linenos="2 "></span>root@5db96abf79b3:/var/www/html/tienda_videojuegos# python3 manage.py create_admin
+</code></pre></div>
+<p>Por ultimo comprobamos que la aplicación está funcionando accediendo a la ip del servidor y al puerto 8080:</p>
+<p><img alt="web" src="img/web.png" /></p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav">
+      <a href="9_3_desplegar_heroku.html" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="9_3_desplegar_heroku.html" class="btn btn-xs btn-link">
+        9.3 Despliegue de aplicación flask en un PaaS Heroku
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content"><p>2022-2023 Jesús Vives - Licencia CC BY-NC-SA</p>
+  <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>
